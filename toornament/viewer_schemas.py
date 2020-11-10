@@ -3,7 +3,7 @@ from .converter import Converter
 
 class Match:
 
-    def __init__(self, id, stage_id, group_id, round_id, number, type, status, scheduled_datetime, played_at,
+    def __init__(self, *, id, stage_id, group_id, round_id, number, type, status, scheduled_datetime, played_at,
                  opponents):
         self.id = int(id)  # The id of the match.
         self.stage_id = int(stage_id)  # The id of the stage that contains this match.
@@ -17,3 +17,12 @@ class Match:
         self.played_at = Converter.datetime(
             played_at)  # The timestamp on which the match was played (a result was provided) in RFC 3339 (combined date, time and utc offset).
         self.opponents = opponents  # Array  # List of match opponents.
+
+
+class MatchDetailed(Match):
+
+    def __init__(self, *, public_note=None, opponents, games, **kwargs):
+        super().__init__(**kwargs)
+        self.public_note = public_note  # Public note of a match, written by the organizer.
+        self.opponents = opponents  # Array  # List of match opponents.
+        self.games = games  # Array  # List of the match games.

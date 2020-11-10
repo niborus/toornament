@@ -29,4 +29,4 @@ class SyncViewerAPI(SyncToornamentConnection):
 
         content = self._simple_access(method, path, path_parameters = path_mapping)
 
-        return Match(**content)
+        return MatchDetailed(**content)
