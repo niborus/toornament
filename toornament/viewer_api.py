@@ -1,4 +1,5 @@
 from .toornament_connection import SyncToornamentConnection
+from .viewer_schemas import *
 
 
 class SyncViewerAPI(SyncToornamentConnection):
@@ -7,7 +8,7 @@ class SyncViewerAPI(SyncToornamentConnection):
     def _base_url():
         return 'https://api.toornament.com/viewer/v2'
 
-    def fetch_match(self, tournament_id, id):
+    def get_match(self, tournament_id, id):
         """Retrieve a single match of a tournament.
         Returns a match with all its games and opponents. In ffa matches only the first four opponents are included in each match game.
 
@@ -26,4 +27,6 @@ class SyncViewerAPI(SyncToornamentConnection):
             'id': id
         }
 
-        return self._simple_access(method, path, path_parameters = path_mapping)
+        content = self._simple_access(method, path, path_parameters = path_mapping)
+
+        return Match(**content)

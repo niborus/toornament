@@ -13,7 +13,7 @@ class SyncToornamentConnection(metaclass=ABCMeta):
     def _base_url() -> str:
         """:returns The Base-URL of the API"""
 
-    def _simple_access(self, method, path, *, path_parameters):
+    def _simple_access(self, method, path, *, path_parameters) -> dict:
 
         headers = {
             'X-Api-Key': self.token
