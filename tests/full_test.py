@@ -12,3 +12,6 @@ print(m)
 
 m = t.get_matches_from_discipline('splatoon2', range = toornament.Range(0, 9))
 print(m)
+
+m = t.get_bracket_nodes(3045919883406483456, 3075364819614916608, range = toornament.Range(0, 4))
+print(m)

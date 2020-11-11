@@ -171,3 +171,57 @@ class SyncViewerAPI(SyncToornamentConnection):
         content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
 
         return [MatchDiscipline(**match) for match in content]
+
+    def get_bracket_nodes(self, tournament_id, stage_id, *, range: Range, group_ids: Optional[list]=None, group_numbers: Optional[list]=None, round_ids: Optional[list]=None, round_numbers: Optional[list]=None, min_depth: Optional[int]=None, max_depth: Optional[int]=None):
+        """Retrieve bracket nodes of a stage and tournament.
+        Returns the bracket nodes of a stage. A bracket node represents a match and some extra data.
+
+        :param range A range of requested items using the 'nodes' unit. The size of the range can not exceed 128. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
+        :param tournament_id The id of the tournament you want to retrieve data about.
+        :param stage_id The id of the stage you want to retrieve data about.
+        :param group_ids A list of group ids to filter.
+        :param group_numbers A list of group numbers to filter.
+        :param round_ids A list of round ids to filter.
+        :param round_numbers A list of round numbers to filter.
+        :param min_depth A minimum depth to filter.
+        :param max_depth A maximal depth to filter."""
+
+        tournament_id = str(tournament_id)
+        stage_id = str(stage_id)
+        group_ids = [str(e) for e in group_ids] if group_ids else group_ids
+        round_ids = [str(e) for e in round_ids] if round_ids else round_ids
+
+        method = 'GET'
+
+        path = '/tournaments/{tournament_id}/stages/{stage_id}/bracket-nodes'
+
+        path_mapping = {
+            'tournament_id': tournament_id,
+            'stage_id': stage_id,
+        }
+
+        query_parameters = {
+        }
+        if group_ids:
+            query_parameters['group_ids'] = group_ids
+        if group_numbers:
+            query_parameters['group_numbers'] = group_numbers
+        if round_ids:
+            query_parameters['round_ids'] = round_ids
+        if round_numbers:
+            query_parameters['round_numbers'] = round_numbers
+        if min_depth:
+            query_parameters['min_depth'] = min_depth
+        if max_depth:
+            query_parameters['max_depth'] = max_depth
+
+        if not range.unit:
+            range.unit = 'nodes'
+
+        headers = {
+            'Range': range.get_header_value(),
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return [BracketNode(**node) for node in content]

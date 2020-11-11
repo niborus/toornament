@@ -77,7 +77,8 @@ class Game:
 
 class Match:
 
-    def __init__(self, *, id, stage_id, group_id, round_id, number, type, status, scheduled_datetime=None, played_at=None, opponents):
+    def __init__(self, *, id, stage_id, group_id, round_id, number, type, status, scheduled_datetime=None,
+                 played_at=None, opponents):
         """
         :param id string The id of the match.
         :param stage_id string The id of the stage that contains this match.
@@ -140,3 +141,61 @@ class MatchDiscipline(Match):
 
         super().__init__(**kwargs)
         self.tournament = Tournament(**tournament)
+
+
+class BracketNodeOpponent:
+
+    def __init__(self, *, number, result=None, rank=None, forfeit, score=None, source_type, source_node_id=None,
+                 participant):
+        """
+        :param number integer A relative identifier between 1 and the total number of participants, it is unique and determined by the seeding.
+        :param result string The game result of the opponent.
+        :param rank integer The rank of the participant in the ranking. Multiple participants can share the same rank if they are tied after applying all configured tiebreakers.
+        :param forfeit boolean Whether the opponent is forfeit.
+        :param score integer The score of the opponent.
+        :param source_type string The type of source of this node item.
+        :param source_node_id string The id of the bracket node connected to this opponent.
+        :param participant The participant identified with this opponent.
+        """
+
+        self.number = number
+        self.result = result
+        self.rank = rank
+        self.forfeit = forfeit
+        self.score = score
+        self.source_type = source_type
+        self.source_node_id = int(source_node_id) if source_node_id else None
+        self.participant = Participant(**participant) if participant else None
+
+
+class BracketNode:
+
+    def __init__(self, *, id, stage_id, group_id, round_id, number, type, status, scheduled_datetime=None,
+                 played_at=None, depth, branch=None, opponents):
+        """
+        :param id string The id of the bracket node and the match (they both share the same id).
+        :param stage_id string The id of the stage that contains this bracket node.
+        :param group_id string The id of the group that contains this bracket node.
+        :param round_id string The id of the round that contains this bracket node.
+        :param number integer The match number (a relative identifier within a round).
+        :param type string The match type.
+        :param status string The status of the match.
+        :param scheduled_datetime string The scheduled date of the match in RFC 3339 (combined date, time and utc offset).
+        :param played_at string The timestamp on which the match was played (a result was provided) in RFC 3339 (combined date, time and utc offset).
+        :param depth integer The depth of the node in the bracket.
+        :param branch string The core branch of the node in the bracket.
+        :param opponents array List of match opponents.
+        """
+
+        self.id = int(id)
+        self.stage_id = int(stage_id)
+        self.group_id = int(group_id)
+        self.round_id = int(round_id)
+        self.number = number
+        self.type = type
+        self.status = status
+        self.scheduled_datetime = Converter.datetime(scheduled_datetime)
+        self.played_at = Converter.datetime(played_at)
+        self.depth = depth
+        self.branch = branch
+        self.opponents = [BracketNodeOpponent(**opponent) for opponent in opponents]
