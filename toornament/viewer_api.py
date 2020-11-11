@@ -225,3 +225,33 @@ class SyncViewerAPI(SyncToornamentConnection):
         content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
 
         return [BracketNode(**node) for node in content]
+
+    def get_custom_fields(self, tournament_id, *, target_type: Optional[str]=None):
+        """Retrieves custom fields of a tournament.
+        Returns the complete definition of all custom fields for a given tournament. This includes both public and private custom fields.
+        A custom field may be associated to a player, a team or a team's player. For more information, please read the [Custom Fields](https://developer.toornament.com/v2/core-concepts/custom-fields) documentation.
+
+        :param tournament_id The id of the tournament you want to retrieve data about.
+        :param target_type The entity affected by the custom fields."""
+
+        tournament_id = str(tournament_id)
+
+        method = 'GET'
+
+        path = '/tournaments/{tournament_id}/custom-fields'
+
+        path_mapping = {
+            'tournament_id': tournament_id,
+        }
+
+        query_parameters = {
+        }
+        if target_type:
+            query_parameters['target_type'] = target_type
+
+        headers = {
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return [CustomField(**field) for field in content]

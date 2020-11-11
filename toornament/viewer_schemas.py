@@ -199,3 +199,27 @@ class BracketNode:
         self.depth = depth
         self.branch = branch
         self.opponents = [BracketNodeOpponent(**opponent) for opponent in opponents]
+
+
+class CustomField:
+
+    def __init__(self, *, machine_name, label, target_type, type, default_value=None, required, public, position):
+        """
+        :param machine_name string A name used to identify a custom field for computing purposes.
+        :param label string The display name of a custom field in forms.
+        :param target_type string The entity concerned by the custom field.
+        :param type string A data type used for both input and computing.
+        :param default_value any A default value (can be array, scalar or null).
+        :param required boolean Whether the custom field is required.
+        :param public boolean Whether the value of the custom field is public.
+        :param position integer The position of the field in forms.
+        """
+
+        self.machine_name = machine_name
+        self.label = label
+        self.target_type = target_type
+        self.type = type
+        self.default_value = default_value
+        self.required = required
+        self.public = public
+        self.position = position
