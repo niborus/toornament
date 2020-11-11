@@ -223,3 +223,63 @@ class CustomField:
         self.required = required
         self.public = public
         self.position = position
+
+
+class Discipline:
+
+    def __init__(self, *, id, name, shortname, fullname, copyrights):
+        """
+        :param id string An identifier for a discipline, can be used in others APIs.
+        :param name string The official name of the discipline.
+        :param shortname string The short name of the discipline.
+        :param fullname string The complete name of the discipline.
+        :param copyrights string Name of the entity or entities that are the creators and/or right holders of the discipline.
+        """
+
+        self.id = str(id)
+        self.name = name
+        self.shortname = shortname
+        self.fullname = fullname
+        self.copyrights = copyrights
+
+
+class DisciplineFeature:
+
+    def __init__(self, *, name, type, options):
+        """
+        :param name string Name of the feature.
+        :param type string Type of the feature.
+        :param options object Options of the feature.
+        """
+
+        self.name = name
+        self.type = type
+        self.options = options
+
+
+class TeamSize:
+
+    def __init__(self, *, min, max):
+        """Sets the minimum and maximum of players in a team
+        :param min integer Minimal size of a team in the tournament.
+        :param max integer Maximal size of a team in the tournament.
+        """
+
+        self.min = min
+        self.max = max
+
+
+class DisciplineDetailed(Discipline):
+
+    def __init__(self, *, platforms_available, team_size, features, **kwargs):
+        """
+        :param platforms_available array A list of platforms available of this discipline.
+        :param team_size object Sets the minimum and maximum of players in a team.
+        :param features array List of features for the discipline.
+        """
+
+        super().__init__(**kwargs)
+
+        self.platforms_available = platforms_available
+        self.team_size = TeamSize(**team_size)
+        self.features = [DisciplineFeature(**feature) for feature in features]

@@ -18,3 +18,9 @@ print(res)
 
 res = t.get_custom_fields(3555729080809455616)
 print(res)
+
+res = t.get_disciplines(range = toornament.Range(0,4))
+print(res)
+
+res = t.get_discipline('splatoon2')
+print(res)

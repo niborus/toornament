@@ -255,3 +255,59 @@ class SyncViewerAPI(SyncToornamentConnection):
         content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
 
         return [CustomField(**field) for field in content]
+
+    def get_disciplines(self, *, range: Range):
+        """Retrieve the list of available disciplines and their basic information.
+        Returns a collection of disciplines.
+
+        :param range
+        A range of requested items using the 'disciplines' unit.
+        The size of the range can not exceed 50. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))"""
+
+
+        method = 'GET'
+
+        path = '/disciplines'
+
+        path_mapping = {
+        }
+
+        query_parameters = {
+        }
+
+        if not range.unit:
+            range.unit = 'disciplines'
+
+        headers = {
+            'Range': range.get_header_value(),
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return [Discipline(**discipline) for discipline in content]
+
+    def get_discipline(self, id):
+        """Retrieve a specific discipline, with advanced information.
+        Returns a discipline with its information and configuration options.
+
+        :param id The string id of the discipline."""
+
+        id = str(id)
+
+        method = 'GET'
+
+        path = '/disciplines/{id}'
+
+        path_mapping = {
+            'id': id,
+        }
+
+        query_parameters = {
+        }
+
+        headers = {
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return DisciplineDetailed(**content)
