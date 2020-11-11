@@ -21,8 +21,23 @@ class Match:
 
 class MatchDetailed(Match):
 
-    def __init__(self, *, public_note=None, opponents, games, **kwargs):
+    def __init__(self, *, public_notes=None, opponents, games, **kwargs):
         super().__init__(**kwargs)
-        self.public_note = public_note  # Public note of a match, written by the organizer.
+        self.public_notes = public_notes  # Public note of a match, written by the organizer.
         self.opponents = opponents  # Array  # List of match opponents.
         self.games = games  # Array  # List of the match games.
+
+
+class Tournament:
+
+    def __init__(self, id, name, full_name=None):
+        self.id = int(id)  # The unique identifier of the tournament.
+        self.name = name  # The name of the tournament.
+        self.full_name = full_name  # The complete name of the tournament.
+
+
+class MatchDiscipline(Match):
+
+    def __init__(self, tournament, **kwargs):
+        super().__init__(**kwargs)
+        self.tournament = Tournament(**tournament)
