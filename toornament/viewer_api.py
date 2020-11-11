@@ -117,3 +117,57 @@ class SyncViewerAPI(SyncToornamentConnection):
                                       headers = headers)
 
         return [Match(**match) for match in content]
+
+    def get_matches_from_discipline(self, discipline_id, *, range: Range, is_featured: Optional[bool]=None, statuses: Optional[list]=None, scheduled_before: Optional[str]=None, scheduled_after: Optional[str]=None, participant_ids: Optional[list]=None, tournament_ids: Optional[list]=None, sort: Optional[str]=None):
+        """Retrieve matches of a discipline, regardless of their tournament.
+        Returns matches of a discipline. In ffa matches only the first four opponents are included in each match game.
+
+        :param range A range of requested items using the 'matches' unit. The size of the range can not exceed 128. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
+        :param discipline_id The string id of the discipline.
+        :param is_featured Whether to include featured tournaments.
+        :param statuses One or several match statuses to filter.
+        :param scheduled_before A datetime in RFC 3339 format (combined date, time and utc offset), to include all matches scheduled before or at the datetime.
+        :param scheduled_after A datetime in RFC 3339 format (combined date, time and utc offset), to include all matches scheduled after or at the datetime
+        :param participant_ids One or several participant ids involved in the matches to filter.
+        :param tournament_ids List of tournament IDs to filter the data with.
+        :param sort A method to sort the filtered data. "structure" sorts using the stage, group, round and match numbers. "schedule" sorts using the scheduled date. "latest results" sorts using the date at which the matches were played (not scheduled)."""
+
+        discipline_id = str(discipline_id)
+        participant_ids = [str(e) for e in participant_ids] if participant_ids else participant_ids
+        tournament_ids = [str(e) for e in tournament_ids] if tournament_ids else tournament_ids
+
+        method = 'GET'
+
+        path = '/disciplines/{discipline_id}/matches'
+
+        path_mapping = {
+            'discipline_id': discipline_id,
+        }
+
+        query_parameters = {
+        }
+        if is_featured:
+            query_parameters['is_featured'] = is_featured
+        if statuses:
+            query_parameters['statuses'] = statuses
+        if scheduled_before:
+            query_parameters['scheduled_before'] = scheduled_before
+        if scheduled_after:
+            query_parameters['scheduled_after'] = scheduled_after
+        if participant_ids:
+            query_parameters['participant_ids'] = participant_ids
+        if tournament_ids:
+            query_parameters['tournament_ids'] = tournament_ids
+        if sort:
+            query_parameters['sort'] = sort
+
+        if not range.unit:
+            range.unit = 'matches'
+
+        headers = {
+            'Range': range.get_header_value(),
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return [MatchDiscipline(**match) for match in content]

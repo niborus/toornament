@@ -5,9 +5,8 @@ from requests import HTTPError
 t = toornament.SyncViewerAPI(TOKEN)
 
 try:
-    r = toornament.Range(0, 50)
-    m = t.get_matches_from_discipline(3555729080809455616, range = toornament.Range(0, 50))
+    m = t.get_matches_from_discipline('splatoon2', range = toornament.Range(0, 4))
 except HTTPError as e:
-    print(e.response.json())
+    print(e.response)
 else:
     print(m)
