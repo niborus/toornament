@@ -33,3 +33,9 @@ print(res)
 
 res = t.get_game(3045919883406483456, 3075364820084678691, 1)
 print(res)
+
+res = t.get_participant(3045919883406483456, 3046102039785750528)
+print(res)
+
+res = t.get_participants(1755617972580818944, range=toornament.Range(0, 4))
+print(res)

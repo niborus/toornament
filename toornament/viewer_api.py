@@ -409,3 +409,69 @@ class SyncViewerAPI(SyncToornamentConnection):
         content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
 
         return Game(**content)
+
+    def get_participants(self, tournament_id, *, range: Range, name: Optional[str]=None, sort: Optional[str]=None):
+        """Retrieve the participants of a tournament.
+        Returns the participants of the given tournament. The data provided in the participant depends on whether the participant type is team or player. This setting can be found in the tournament.
+
+        :param range: A range of requested items using the 'participants' unit. The size of the range can not exceed 50. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
+        :param tournament_id: The id of the tournament the participants are from.
+        :param name: The string to be looked for in the name of the participant.
+        :param sort: A method to sort the filtered data. “created_asc” and “created_desc” sort the participants from their creation date (earliest to latest, and inversely). “Alphabetic” sorts the participants using their case-insensitive names."""
+
+        tournament_id = str(tournament_id)
+
+        method = 'GET'
+
+        path = '/tournaments/{tournament_id}/participants'
+
+        path_mapping = {
+            'tournament_id': tournament_id,
+        }
+
+        query_parameters = {
+        }
+        if name:
+            query_parameters['name'] = name
+        if sort:
+            query_parameters['sort'] = sort
+
+        if not range.unit:
+            range.unit = 'participants'
+
+        headers = {
+            'Range': range.get_header_value(),
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return [ParticipantPlayer(**participant) if participant.get('lineup') is None else ParticipantTeam(**participant) for participant in content]
+
+    def get_participant(self, tournament_id, id):
+        """Retrieve a single participant of a tournament.
+        Returns a participant identified with the given id. The data provided in the participant depends on whether the participant type is team or player. This setting can be found in the tournament.
+
+        :param tournament_id: The id of the tournament the participants are from.
+        :param id: The id of the participant to retrieve."""
+
+        tournament_id = str(tournament_id)
+        id = str(id)
+
+        method = 'GET'
+
+        path = '/tournaments/{tournament_id}/participants/{id}'
+
+        path_mapping = {
+            'tournament_id': tournament_id,
+            'id': id,
+        }
+
+        query_parameters = {
+        }
+
+        headers = {
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return ParticipantPlayer(**content) if content.get('lineup') is None else ParticipantTeam(**content)

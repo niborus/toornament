@@ -305,3 +305,41 @@ class Group:
         self.name = name
         self.closed = closed
         self.settings = settings
+
+
+class ParticipantPlayer:
+
+    def __init__(self, *, id, name, custom_fields):
+        """
+        :param id string The id of the participant.
+        :param name string The name of the participant.
+        :param custom_fields object The values of the public custom fields configured in the tournament using the machine names as keys. For more information, please read the [Custom Fields](https://developer.toornament.com/v2/core-concepts/custom-fields) documentation.
+        """
+
+        self.id = int(id)
+        self.name = name
+        self.custom_fields = custom_fields
+
+
+class TeamPlayerParticipant:
+
+    def __init__(self, *, name, custom_fields):
+        """
+        :param name string The name of the team player.
+        :param custom_fields object The values of the public custom fields configured in the tournament using the machine names as keys. For more information, please read the [Custom Fields](https://developer.toornament.com/v2/core-concepts/custom-fields) documentation.
+        """
+
+        self.name = name
+        self.custom_fields = custom_fields
+
+
+class ParticipantTeam(ParticipantPlayer):
+
+    def __init__(self, *, lineup, **kwargs):
+        """
+        :param lineup array A list of players in a team (Only if the tournament participant type is “team”).
+        """
+
+        super().__init__(**kwargs)
+
+        self.lineup = [TeamPlayerParticipant(**player) for player in lineup]
