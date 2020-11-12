@@ -17,7 +17,7 @@ class Participant:
 
 class Opponent:
 
-    def __init__(self, *, number, position=None, result=None, rank=None, forfeit, score=None):
+    def __init__(self, *, number, position=None, result=None, rank=None, forfeit, score=None, properties=None):
         """
         :param number integer A relative identifier between 1 and the total number of participants, it is unique and determined by the seeding.
         :param position integer The position of the participant in the ranking. It is unique and tied participants have their position determined by their number.
@@ -33,6 +33,7 @@ class Opponent:
         self.rank = rank
         self.forfeit = forfeit
         self.score = score
+        self.properties = properties
 
 
 class MatchOpponent(Opponent):
@@ -61,7 +62,7 @@ class MatchGameOpponent(Opponent):
 
 class Game:
 
-    def __init__(self, *, number, status, opponents, properties):
+    def __init__(self, *, number, type=None, status, opponents, properties):
         """
         :param number integer A relative identifier between 1 and the total number of games, to identify the game within the match.
         :param status string The status of the match game.
@@ -70,6 +71,7 @@ class Game:
         """
 
         self.number = number
+        self.type = type
         self.status = status
         self.opponents = [MatchGameOpponent(**opponent) for opponent in opponents]
         self.properties = properties

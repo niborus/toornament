@@ -378,3 +378,34 @@ class SyncViewerAPI(SyncToornamentConnection):
         content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
 
         return Group(**content)
+
+    def get_game(self, tournament_id, match_id, number):
+        """Retrieve a single game of a match.
+        Returns detailed information about one match game.
+
+        :param tournament_id: The id of the tournament you want to retrieve data about.
+        :param match_id: The id of the match to retrieve.
+        :param number: The relative identifier of the match game to retrieve."""
+
+        tournament_id = str(tournament_id)
+        match_id = str(match_id)
+
+        method = 'GET'
+
+        path = '/tournaments/{tournament_id}/matches/{match_id}/games/{number}'
+
+        path_mapping = {
+            'tournament_id': tournament_id,
+            'match_id': match_id,
+            'number': number,
+        }
+
+        query_parameters = {
+        }
+
+        headers = {
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return Game(**content)
