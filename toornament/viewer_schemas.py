@@ -495,3 +495,49 @@ class StandingItem:
         self.rank = rank
         self.participant = Participant(**participant) if participant else None
         self.tournament_id = int(tournament_id)
+
+
+class Stream:
+
+    def __init__(self, *, id, name, url, language):
+        """
+        :param id string An identifier for a stream.
+        :param name string The title of the stream.
+        :param url string The URL of the stream.
+        :param language string The language code of the stream content in ISO 639-1 code
+        """
+
+        self.id = int(id)
+        self.name = name
+        self.url = url
+        self.language = language
+
+
+class Video:
+
+    def __init__(self, *, id, name, url, language, category):
+        """
+        :param id string An identifier for a video.
+        :param name string The title of the video.
+        :param url string The URL of the video.
+        :param language string Language code of the video content in ISO 639-1 code
+        :param category string The category of the video.
+        """
+
+        self.id = int(id)
+        self.name = name
+        self.url = url
+        self.language = language
+        self.category = category
+
+
+class VideoTournament(Video):
+
+    def __init__(self, *, match_id=None, **kwargs):
+        """
+        :param match_id string The match's identifier of this video.
+        """
+
+        super().__init__(**kwargs)
+
+        self.match_id = int(match_id) if match_id else None

@@ -706,3 +706,114 @@ class SyncViewerAPI(SyncToornamentConnection):
         content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
 
         return [StandingItem(**item) for item in content]
+
+    def get_streams(self, tournament_id, *, range: Range, match_ids: Optional[list]=None):
+        """Retrieves available streams.
+        Returns the streams of the given tournament.
+
+        :param tournament_id: The id of the tournament you want to retrieve data about.
+        :param range: A range of requested items using the 'streams' unit. The size of the range can not exceed 50. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
+        :param match_ids: A list of match ids to filter."""
+
+        tournament_id = str(tournament_id)
+        match_ids = [str(e) for e in match_ids] if match_ids else match_ids
+
+        method = 'GET'
+
+        path = '/tournaments/{tournament_id}/streams'
+
+        path_mapping = {
+            'tournament_id': tournament_id,
+        }
+
+        query_parameters = {
+        }
+        if match_ids:
+            query_parameters['match_ids'] = match_ids
+
+        if not range.unit:
+            range.unit = 'streams'
+
+        headers = {
+            'Range': range.get_header_value(),
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return [Stream(**stream) for stream in content]
+
+    def get_videos(self, tournament_id, *, range: Range, participant_ids: Optional[list]=None, category: Optional[str]=None, sort: Optional[str]=None):
+        """Retrieve videos of a tournament.
+        Returns the videos of the given tournament.
+
+        :param tournament_id: The id of the tournament you want to retrieve data about.
+        :param range: A range of requested items using the 'videos' unit. The size of the range can not exceed 50. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
+        :param participant_ids: One or several participant ids to filter.
+        :param category: The category of the videos.
+        :param sort: Sorts the collection in a particular order. "created_asc" sorts the videos from the oldest to the most recent one; "created_desc" sorts the videos from the most recent to the oldest one."""
+
+        tournament_id = str(tournament_id)
+        participant_ids = [str(e) for e in participant_ids] if participant_ids else participant_ids
+
+        method = 'GET'
+
+        path = '/tournaments/{tournament_id}/videos'
+
+        path_mapping = {
+            'tournament_id': tournament_id,
+        }
+
+        query_parameters = {
+        }
+        if participant_ids:
+            query_parameters['participant_ids'] = participant_ids
+        if category:
+            query_parameters['category'] = category
+        if sort:
+            query_parameters['sort'] = sort
+
+        if not range.unit:
+            range.unit = 'videos'
+
+        headers = {
+            'Range': range.get_header_value(),
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return [VideoTournament(**video) for video in content]
+
+    def get_videos_by_match(self, tournament_id, match_id, *, category: Optional[str]=None, sort: Optional[str]=None):
+        """Retrieve videos of a match.
+        Returns the videos of the given match.
+
+        :param tournament_id: The id of the tournament you want to retrieve data about.
+        :param match_id: The id of the match to retrieve.
+        :param category: The category of the videos.
+        :param sort: Sorts the collection in a particular order. "created_asc" sorts the videos from the oldest to the most recent one; "created_desc" sorts the videos from the most recent to the oldest one."""
+
+        tournament_id = str(tournament_id)
+        match_id = str(match_id)
+
+        method = 'GET'
+
+        path = '/tournaments/{tournament_id}/matches/{match_id}/videos'
+
+        path_mapping = {
+            'tournament_id': tournament_id,
+            'match_id': match_id,
+        }
+
+        query_parameters = {
+        }
+        if category:
+            query_parameters['category'] = category
+        if sort:
+            query_parameters['sort'] = sort
+
+        headers = {
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return [Video(**video) for video in content]

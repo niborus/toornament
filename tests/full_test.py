@@ -59,3 +59,12 @@ print(res)
 
 res = t.get_stage(3555729080809455616, 3555733280880140288)
 print(res)
+
+res = t.get_videos(3555729080809455616, range = toornament.Range(0, 49))
+print(res)
+
+res = t.get_videos_by_match(3555729080809455616, 3555734570995318785)
+print(res)
+
+res = t.get_streams(1755617972580818944, range = toornament.Range(0, 1))
+print(res)
