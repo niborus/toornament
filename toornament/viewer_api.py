@@ -542,3 +542,77 @@ class SyncViewerAPI(SyncToornamentConnection):
         content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
 
         return [RankingItem(**item) for item in content]
+
+    def get_rounds(self, tournament_id, *, range: Range, stage_ids: Optional[list]=None, stage_numbers: Optional[list]=None, group_ids: Optional[list]=None, group_numbers: Optional[list]=None):
+        """Retrieve all rounds of a tournament.
+        Returns all rounds of a tournament with basic information and settings.
+
+        :param range: A range of requested items using the 'rounds' unit. The size of the range can not exceed 50. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
+        :param tournament_id: The id of the tournament you want to retrieve data about.
+        :param stage_ids: A list of stage ids to filter.
+        :param stage_numbers: A list of stage numbers to filter.
+        :param group_ids: A list of group ids to filter.
+        :param group_numbers: A list of group numbers to filter."""
+
+        tournament_id = str(tournament_id)
+        stage_ids = [str(e) for e in stage_ids] if stage_ids else stage_ids
+        group_ids = [str(e) for e in group_ids] if group_ids else group_ids
+
+        method = 'GET'
+
+        path = '/tournaments/{tournament_id}/rounds'
+
+        path_mapping = {
+            'tournament_id': tournament_id,
+        }
+
+        query_parameters = {
+        }
+        if stage_ids:
+            query_parameters['stage_ids'] = stage_ids
+        if stage_numbers:
+            query_parameters['stage_numbers'] = stage_numbers
+        if group_ids:
+            query_parameters['group_ids'] = group_ids
+        if group_numbers:
+            query_parameters['group_numbers'] = group_numbers
+
+        if not range.unit:
+            range.unit = 'rounds'
+
+        headers = {
+            'Range': range.get_header_value(),
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return [Round(**round) for round in content]
+
+    def get_round(self, tournament_id, id):
+        """Retrieve a single round of a tournament.
+        Returns a round with the given id with basic information and settings.
+
+        :param tournament_id: The id of the tournament you want to retrieve data about.
+        :param id: The id of the round to retrieve."""
+
+        tournament_id = str(tournament_id)
+        id = str(id)
+
+        method = 'GET'
+
+        path = '/tournaments/{tournament_id}/rounds/{id}'
+
+        path_mapping = {
+            'tournament_id': tournament_id,
+            'id': id,
+        }
+
+        query_parameters = {
+        }
+
+        headers = {
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return Round(**content)

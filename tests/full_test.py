@@ -50,3 +50,6 @@ print(res)
 # Ranking Items Properties with Score
 res = t.get_ranking_items(3555729080809455616, 4092864627355385856, range = toornament.Range(0, 2))
 print(res)
+
+res = t.get_rounds(3555729080809455616, range = toornament.Range(0, 2))
+print(res)

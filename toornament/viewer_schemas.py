@@ -435,3 +435,25 @@ class RankingItem:
             self.properties = RankingItemPropertiesSwiss(**properties)
         else:
             self.properties = RankingItemProperties(**properties)
+
+
+class Round:
+
+    def __init__(self, *, id, stage_id, group_id, number, name, closed, settings):
+        """
+        :param id string The id of the round.
+        :param stage_id string The id of the stage that contains the round.
+        :param group_id string The id of the group that contains the round.
+        :param number integer A number used for ordering rounds.
+        :param name string The name of the round.
+        :param closed boolean Whether the round is closed.
+        :param settings object Settings that describe the various options related to the round and stage types.
+        """
+
+        self.id = int(id)
+        self.stage_id = int(stage_id)
+        self.group_id = int(group_id)
+        self.number = number
+        self.name = name
+        self.closed = closed
+        self.settings = settings
