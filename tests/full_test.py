@@ -24,3 +24,9 @@ print(res)
 
 res = t.get_discipline('splatoon2')
 print(res)
+
+res = t.get_groups(3555729080809455616, range = toornament.Range(0, 4))
+print(res)
+
+res = t.get_group(3555729080809455616, 3555734570961764352)
+print(res)

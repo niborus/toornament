@@ -14,8 +14,8 @@ class SyncViewerAPI(SyncToornamentConnection):
         """Retrieve a single match of a tournament.
         Returns a match with all its games and opponents. In ffa matches only the first four opponents are included in each match game.
 
-        :param tournament_id The id of the tournament you want to retrieve data about.
-        :param id The id of the match to retrieve."""
+        :param tournament_id: The id of the tournament you want to retrieve data about.
+        :param id: The id of the match to retrieve."""
 
         tournament_id = str(tournament_id)
         id = str(id)
@@ -50,20 +50,20 @@ class SyncViewerAPI(SyncToornamentConnection):
         """Retrieve matches of a tournament.
         Returns the matches of a tournament. In ffa matches only the first four opponents are included in each match.
 
-        :param range A range of requested items using the 'matches' unit. The size of the range can not exceed 128. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
-        :param tournament_id The id of the tournament you want to retrieve data about.
-        :param stage_ids One or several stage ids to filter.
-        :param stage_numbers One or several stage numbers to filter.
-        :param group_ids One or several group ids to filter.
-        :param group_numbers One or several group numbers to filter.
-        :param round_ids One or several round ids to filter.
-        :param round_numbers One or several round numbers to filter.
-        :param statuses One or several match statuses to filter.
-        :param is_scheduled Whether to include scheduled matches.
-        :param scheduled_before A datetime in RFC 3339 format (combined date, time and utc offset), to include all matches scheduled before or at the datetime.
-        :param scheduled_after A datetime in RFC 3339 format (combined date, time and utc offset), to include all matches scheduled after or at the datetime
-        :param participant_ids One or several participant ids involved in the matches to filter.
-        :param sort A method to sort the filtered data. "structure" sorts using the stage, group, round and match numbers. "schedule" sorts using the scheduled date. "latest results" sorts using the date at which the matches were played (not scheduled)."""
+        :param range: A range of requested items using the 'matches' unit. The size of the range can not exceed 128. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
+        :param tournament_id: The id of the tournament you want to retrieve data about.
+        :param stage_ids: One or several stage ids to filter.
+        :param stage_numbers: One or several stage numbers to filter.
+        :param group_ids: One or several group ids to filter.
+        :param group_numbers: One or several group numbers to filter.
+        :param round_ids: One or several round ids to filter.
+        :param round_numbers: One or several round numbers to filter.
+        :param statuses: One or several match statuses to filter.
+        :param is_scheduled: Whether to include scheduled matches.
+        :param scheduled_before: A datetime in RFC 3339 format (combined date, time and utc offset), to include all matches scheduled before or at the datetime.
+        :param scheduled_after: A datetime in RFC 3339 format (combined date, time and utc offset), to include all matches scheduled after or at the datetime
+        :param participant_ids: One or several participant ids involved in the matches to filter.
+        :param sort: A method to sort the filtered data. "structure" sorts using the stage, group, round and match numbers. "schedule" sorts using the scheduled date. "latest results" sorts using the date at which the matches were played (not scheduled)."""
 
         tournament_id = str(tournament_id)
         stage_ids = [str(e) for e in stage_ids] if stage_ids else stage_ids
@@ -122,15 +122,15 @@ class SyncViewerAPI(SyncToornamentConnection):
         """Retrieve matches of a discipline, regardless of their tournament.
         Returns matches of a discipline. In ffa matches only the first four opponents are included in each match game.
 
-        :param range A range of requested items using the 'matches' unit. The size of the range can not exceed 128. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
-        :param discipline_id The string id of the discipline.
-        :param is_featured Whether to include featured tournaments.
-        :param statuses One or several match statuses to filter.
-        :param scheduled_before A datetime in RFC 3339 format (combined date, time and utc offset), to include all matches scheduled before or at the datetime.
-        :param scheduled_after A datetime in RFC 3339 format (combined date, time and utc offset), to include all matches scheduled after or at the datetime
-        :param participant_ids One or several participant ids involved in the matches to filter.
-        :param tournament_ids List of tournament IDs to filter the data with.
-        :param sort A method to sort the filtered data. "structure" sorts using the stage, group, round and match numbers. "schedule" sorts using the scheduled date. "latest results" sorts using the date at which the matches were played (not scheduled)."""
+        :param range: A range of requested items using the 'matches' unit. The size of the range can not exceed 128. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
+        :param discipline_id: The string id of the discipline.
+        :param is_featured: Whether to include featured tournaments.
+        :param statuses: One or several match statuses to filter.
+        :param scheduled_before: A datetime in RFC 3339 format (combined date, time and utc offset), to include all matches scheduled before or at the datetime.
+        :param scheduled_after: A datetime in RFC 3339 format (combined date, time and utc offset), to include all matches scheduled after or at the datetime
+        :param participant_ids: One or several participant ids involved in the matches to filter.
+        :param tournament_ids: List of tournament IDs to filter the data with.
+        :param sort: A method to sort the filtered data. "structure" sorts using the stage, group, round and match numbers. "schedule" sorts using the scheduled date. "latest results" sorts using the date at which the matches were played (not scheduled)."""
 
         discipline_id = str(discipline_id)
         participant_ids = [str(e) for e in participant_ids] if participant_ids else participant_ids
@@ -176,15 +176,15 @@ class SyncViewerAPI(SyncToornamentConnection):
         """Retrieve bracket nodes of a stage and tournament.
         Returns the bracket nodes of a stage. A bracket node represents a match and some extra data.
 
-        :param range A range of requested items using the 'nodes' unit. The size of the range can not exceed 128. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
-        :param tournament_id The id of the tournament you want to retrieve data about.
-        :param stage_id The id of the stage you want to retrieve data about.
-        :param group_ids A list of group ids to filter.
-        :param group_numbers A list of group numbers to filter.
-        :param round_ids A list of round ids to filter.
-        :param round_numbers A list of round numbers to filter.
-        :param min_depth A minimum depth to filter.
-        :param max_depth A maximal depth to filter."""
+        :param range: A range of requested items using the 'nodes' unit. The size of the range can not exceed 128. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
+        :param tournament_id: The id of the tournament you want to retrieve data about.
+        :param stage_id: The id of the stage you want to retrieve data about.
+        :param group_ids: A list of group ids to filter.
+        :param group_numbers: A list of group numbers to filter.
+        :param round_ids: A list of round ids to filter.
+        :param round_numbers: A list of round numbers to filter.
+        :param min_depth: A minimum depth to filter.
+        :param max_depth: A maximal depth to filter."""
 
         tournament_id = str(tournament_id)
         stage_id = str(stage_id)
@@ -231,8 +231,8 @@ class SyncViewerAPI(SyncToornamentConnection):
         Returns the complete definition of all custom fields for a given tournament. This includes both public and private custom fields.
         A custom field may be associated to a player, a team or a team's player. For more information, please read the [Custom Fields](https://developer.toornament.com/v2/core-concepts/custom-fields) documentation.
 
-        :param tournament_id The id of the tournament you want to retrieve data about.
-        :param target_type The entity affected by the custom fields."""
+        :param tournament_id: The id of the tournament you want to retrieve data about.
+        :param target_type: The entity affected by the custom fields."""
 
         tournament_id = str(tournament_id)
 
@@ -290,7 +290,7 @@ class SyncViewerAPI(SyncToornamentConnection):
         """Retrieve a specific discipline, with advanced information.
         Returns a discipline with its information and configuration options.
 
-        :param id The string id of the discipline."""
+        :param id: The string id of the discipline."""
 
         id = str(id)
 
@@ -311,3 +311,70 @@ class SyncViewerAPI(SyncToornamentConnection):
         content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
 
         return DisciplineDetailed(**content)
+
+    def get_groups(self, tournament_id, *, range: Range, stage_ids: Optional[list]=None, stage_numbers: Optional[list]=None):
+        """Retrieve all groups of a tournament.
+        Returns all groups of a tournament with basic information and settings.
+
+        :param range: A range of requested items using the 'groups' unit. The size of the range can not exceed 50. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
+        :param tournament_id: The id of the tournament you want to retrieve data about.
+        :param stage_ids: A list of stage ids to filter.
+        :param stage_numbers: A list of stage numbers to filter."""
+
+        tournament_id = str(tournament_id)
+        stage_ids = [str(e) for e in stage_ids] if stage_ids else stage_ids
+
+        method = 'GET'
+
+        path = '/tournaments/{tournament_id}/groups'
+
+        path_mapping = {
+            'tournament_id': tournament_id,
+        }
+
+        query_parameters = {
+        }
+        if stage_ids:
+            query_parameters['stage_ids'] = stage_ids
+        if stage_numbers:
+            query_parameters['stage_numbers'] = stage_numbers
+
+        if not range.unit:
+            range.unit = 'groups'
+
+        headers = {
+            'Range': range.get_header_value(),
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return [Group(**group) for group in content]
+
+    def get_group(self, tournament_id, id):
+        """Retrieve a single group of a tournament.
+        Returns a group with the given id with basic information and settings.
+
+        :param tournament_id: The id of the tournament you want to retrieve data about.
+        :param id: The id of the group to retrieve."""
+
+        tournament_id = str(tournament_id)
+        id = str(id)
+
+        method = 'GET'
+
+        path = '/tournaments/{tournament_id}/groups/{id}'
+
+        path_mapping = {
+            'tournament_id': tournament_id,
+            'id': id,
+        }
+
+        query_parameters = {
+        }
+
+        headers = {
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return Group(**content)

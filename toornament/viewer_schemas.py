@@ -283,3 +283,23 @@ class DisciplineDetailed(Discipline):
         self.platforms_available = platforms_available
         self.team_size = TeamSize(**team_size)
         self.features = [DisciplineFeature(**feature) for feature in features]
+
+
+class Group:
+
+    def __init__(self, *, id, stage_id, number, name, closed, settings):
+        """
+        :param id string The id of the group.
+        :param stage_id string The id of the stage that contains the group.
+        :param number integer A number used for ordering groups.
+        :param name string The name of the group.
+        :param closed boolean Whether the group is closed.
+        :param settings object Settings that describe the various options related to the group and stage types.
+        """
+
+        self.id = int(id)
+        self.stage_id = int(stage_id)
+        self.number = number
+        self.name = name
+        self.closed = closed
+        self.settings = settings
