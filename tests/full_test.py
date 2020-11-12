@@ -68,3 +68,14 @@ print(res)
 
 res = t.get_streams(1755617972580818944, range = toornament.Range(0, 1))
 print(res)
+
+res = t.get_tournaments_featured(range = toornament.Range(0, 4), disciplines = 'splatoon2')
+print(res)
+
+res = t.get_tournament(1755617972580818944)
+print(res)
+
+res = t.get_tournaments_by_playlist(4092769699448848384, range = toornament.Range(0, 2))
+print(res)
+
+print(toornament.Information.fetch_platforms())

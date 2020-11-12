@@ -120,7 +120,7 @@ class MatchDetailed(Match):
         self.games = [Game(**game) for game in games]
 
 
-class Tournament:
+class TournamentLight:
 
     def __init__(self, *, id, name, full_name=None):
         """
@@ -142,7 +142,7 @@ class MatchDiscipline(Match):
         """
 
         super().__init__(**kwargs)
-        self.tournament = Tournament(**tournament)
+        self.tournament = TournamentLight(**tournament)
 
 
 class BracketNodeOpponent:
@@ -541,3 +541,94 @@ class VideoTournament(Video):
         super().__init__(**kwargs)
 
         self.match_id = int(match_id) if match_id else None
+
+
+class TournamentLogo:
+
+    def __init__(self, *, logo_small, logo_medium, logo_large, original):
+        """
+        :param logo_small string URL of the small version of  the tournament logo.
+        :param logo_medium string URL of the medium version of  the tournament logo.
+        :param logo_large string URL of the large version of  the tournament logo.
+        :param original string URL of the original version of  the tournament logo.
+        """
+
+        self.logo_small = logo_small
+        self.logo_medium = logo_medium
+        self.logo_large = logo_large
+        self.original = original
+
+
+class Tournament:
+
+    def __init__(self, *, id, discipline, name, full_name=None, status, scheduled_date_start=None,
+                 scheduled_date_end=None, timezone, public, size, online=None, location=None, country=None, platforms,
+                 logo, registration_enabled, registration_opening_datetime=None, registration_closing_datetime=None):
+        """
+        :param id string The unique identifier of the tournament.
+        :param discipline string A unique identifier of the tournament’s discipline.
+        :param name string The name of the tournament.
+        :param full_name string The complete name of the tournament.
+        :param status string The status of the tournament
+        :param scheduled_date_start string A starting date in ISO 8601 format (only the date part, with YYYY-MM-DD pattern).
+        :param scheduled_date_end string An ending date in ISO 8601 format (only the date part, with YYYY-MM-DD pattern).
+        :param timezone string A time zone from the IANA tz database.
+        :param public boolean Whether the tournament is published.
+        :param size integer The expected number of participants in the tournament.
+        :param online boolean Whether the tournament is played on internet.
+        :param location string The region, city, address or place of interest where the tournament is held.
+        :param country string The country where the tournament is played. Some codes may not be supported. (format is ISO 3166-1 alpha-2)
+        :param platforms array A list of platforms on which the tournament can be played.
+        :param logo
+        :param registration_enabled boolean Whether the registration process is enabled.
+        :param registration_opening_datetime string The opening date of the registrations in RFC 3339 format (combined date, time and utc offset)
+        :param registration_closing_datetime string The closing date of the registrations in RFC 3339 format (combined date, time and utc offset)
+        """
+
+        self.id = int(id)
+        self.discipline = discipline
+        self.name = name
+        self.full_name = full_name
+        self.status = status
+        self.scheduled_date_start = Converter.date(scheduled_date_start)
+        self.scheduled_date_end = Converter.date(scheduled_date_end)
+        self.timezone = timezone
+        self.public = public
+        self.size = size
+        self.online = online
+        self.location = location
+        self.country = country
+        self.platforms = platforms
+        self.logo = TournamentLogo(**logo) if logo else None
+        self.registration_enabled = registration_enabled
+        self.registration_opening_datetime = Converter.datetime(registration_opening_datetime)
+        self.registration_closing_datetime = Converter.datetime(registration_closing_datetime)
+
+
+class TournamentDetailed(Tournament):
+
+    def __init__(self, *, participant_type, organization=None, contact=None, discord=None, website=None,
+                 description=None, rules=None, prize=None, settings, **kwargs):
+        """
+        :param participant_type string The type of participants that play in the tournament.
+        :param organization string The name of the organizer, be it an individual, group, association or company.
+        :param contact string The email address to contact the organizer.
+        :param discord string Invite URL to the tournament Discord server.
+        :param website string The tournament's official website URL.
+        :param description string A description of the tournament.
+        :param rules string The rules of the tournament.
+        :param prize string The prizes of the tournament.
+        :param settings object List of tournament settings, it usually contains discipline information for the entire tournament (maps, champions...).
+        """
+
+        super().__init__(**kwargs)
+
+        self.participant_type = participant_type
+        self.organization = organization
+        self.contact = contact
+        self.discord = discord
+        self.website = website
+        self.description = description
+        self.rules = rules
+        self.prize = prize
+        self.settings = settings
