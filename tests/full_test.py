@@ -54,10 +54,16 @@ print(res)
 res = t.get_rounds(3555729080809455616, range = toornament.Range(0, 2))
 print(res)
 
+res = t.get_round(3555729080809455616, 3555734570995318830)
+print(res)
+
 res = t.get_stages(3555729080809455616)
 print(res)
 
 res = t.get_stage(3555729080809455616, 3555733280880140288)
+print(res)
+
+res = t.get_standings(range = toornament.Range(0, 9), tournament_ids = [3555729080809455616])
 print(res)
 
 res = t.get_videos(3555729080809455616, range = toornament.Range(0, 49))
