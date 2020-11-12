@@ -616,3 +616,93 @@ class SyncViewerAPI(SyncToornamentConnection):
         content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
 
         return Round(**content)
+
+    def get_stages(self, tournament_id):
+        """Retrieve all stages of a tournament.
+        Returns all stages of a tournament with basic information and settings.
+
+        :param tournament_id: The id of the tournament you want to retrieve data about."""
+
+        tournament_id = str(tournament_id)
+
+        method = 'GET'
+
+        path = '/tournaments/{tournament_id}/stages'
+
+        path_mapping = {
+            'tournament_id': tournament_id,
+        }
+
+        query_parameters = {
+        }
+
+        headers = {
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return [Stage(**stage) for stage in content]
+
+    def get_stage(self, tournament_id, id):
+        """Retrieve a single stage of a tournament.
+        Returns a stage with the given id with basic information and settings.
+
+        :param tournament_id: The id of the tournament you want to retrieve data about.
+        :param id: The id of the stage to retrieve."""
+
+        tournament_id = str(tournament_id)
+        id = str(id)
+
+        method = 'GET'
+
+        path = '/tournaments/{tournament_id}/stages/{id}'
+
+        path_mapping = {
+            'tournament_id': tournament_id,
+            'id': id,
+        }
+
+        query_parameters = {
+        }
+
+        headers = {
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return Stage(**content)
+
+    def get_standings(self, *, range: Range, tournament_ids: list, participant_ids: Optional[list]=None):
+        """Retrieve a list of final standing items.
+        Returns a list of final standing items.
+
+        :param range: A range of requested items using the 'items' unit. The size of the range can not exceed 50. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
+        :param tournament_ids: Only return tournaments for the given list of ids.
+        :param participant_ids: One or several participant ids involved in the standings to filter."""
+
+        tournament_ids = [str(e) for e in tournament_ids]
+        participant_ids = [str(e) for e in participant_ids] if participant_ids else participant_ids
+
+        method = 'GET'
+
+        path = '/standings'
+
+        path_mapping = {
+        }
+
+        query_parameters = {
+            'tournament_ids': tournament_ids,
+        }
+        if participant_ids:
+            query_parameters['participant_ids'] = participant_ids
+
+        if not range.unit:
+            range.unit = 'items'
+
+        headers = {
+            'Range': range.get_header_value(),
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return [StandingItem(**item) for item in content]

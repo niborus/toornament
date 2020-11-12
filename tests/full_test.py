@@ -53,3 +53,9 @@ print(res)
 
 res = t.get_rounds(3555729080809455616, range = toornament.Range(0, 2))
 print(res)
+
+res = t.get_stages(3555729080809455616)
+print(res)
+
+res = t.get_stage(3555729080809455616, 3555733280880140288)
+print(res)

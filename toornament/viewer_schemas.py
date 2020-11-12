@@ -457,3 +457,41 @@ class Round:
         self.name = name
         self.closed = closed
         self.settings = settings
+
+
+class Stage:
+
+    def __init__(self, *, id, number, name, type, closed, settings):
+        """
+        :param id string The id of the stage.
+        :param number integer A number used for ordering stages.
+        :param name string The name of the stage.
+        :param type string The type of stage that defines how the stage functions.
+        :param closed boolean Whether the stage is closed.
+        :param settings object Settings that describe the various options for the stage type.
+        """
+
+        self.id = int(id)
+        self.number = number
+        self.name = name
+        self.type = type
+        self.closed = closed
+        self.settings = settings
+
+
+class StandingItem:
+
+    def __init__(self, *, id, position, rank=None, participant=None, tournament_id):
+        """
+        :param id string A unique identifier for the standing item.
+        :param position integer A position used for presentation purposes. It is always unique within the same standing.
+        :param rank integer The ranking of the participant in the standing. Multiple participants can share the same rank if they are tied after involving all configured tiebreakers.
+        :param participant
+        :param tournament_id string The id of the tournament.
+        """
+
+        self.id = int(id)
+        self.position = position
+        self.rank = rank
+        self.participant = Participant(**participant) if participant else None
+        self.tournament_id = int(tournament_id)
