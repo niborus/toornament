@@ -475,3 +475,29 @@ class SyncViewerAPI(SyncToornamentConnection):
         content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
 
         return ParticipantPlayer(**content) if content.get('lineup') is None else ParticipantTeam(**content)
+
+    def get_playlist(self, id):
+        """Retrieve a single playlist.
+        Returns a playlist identified with the given id.
+
+        :param id: The id of the playlist to retrieve."""
+
+        id = str(id)
+
+        method = 'GET'
+
+        path = '/playlists/{id}'
+
+        path_mapping = {
+            'id': id,
+        }
+
+        query_parameters = {
+        }
+
+        headers = {
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return Playlist(**content)

@@ -39,3 +39,6 @@ print(res)
 
 res = t.get_participants(1755617972580818944, range=toornament.Range(0, 4))
 print(res)
+
+res = t.get_playlist(4092769699448848384)
+print(res)

@@ -343,3 +343,17 @@ class ParticipantTeam(ParticipantPlayer):
         super().__init__(**kwargs)
 
         self.lineup = [TeamPlayerParticipant(**player) for player in lineup]
+
+
+class Playlist:
+
+    def __init__(self, *, id, name, description=None):
+        """
+        :param id string A unique identifier for the playlist.
+        :param name string The name of the playlist.
+        :param description string A description of the playlist.
+        """
+
+        self.id = int(id)
+        self.name = name
+        self.description = description
