@@ -357,3 +357,81 @@ class Playlist:
         self.id = int(id)
         self.name = name
         self.description = description
+
+
+class RankingItemProperties:
+
+    def __init__(self, *, wins, draws, losses, played, forfeits, **undocumented_properties):
+        """
+        :param wins integer
+        :param draws integer
+        :param losses integer
+        :param played integer
+        :param forfeits integer
+        :param undocumented_properties: dict Properties that where not documented during the development of the module.
+        """
+
+        self.wins = wins
+        self.draws = draws
+        self.losses = losses
+        self.played = played
+        self.forfeits = forfeits
+        self.undocumented_properties = undocumented_properties
+
+
+class RankingItemPropertiesWithScore(RankingItemProperties):
+
+    def __init__(self, *, score_for, score_against, score_difference, **kwargs):
+        """
+        :param score_for integer
+        :param score_against integer
+        :param score_difference integer
+        """
+
+        super().__init__(**kwargs)
+
+        self.score_for = score_for
+        self.score_against = score_against
+        self.score_difference = score_difference
+
+
+class RankingItemPropertiesSwiss(RankingItemProperties):
+
+    def __init__(self, *, match_history, **kwargs):
+        """
+        :param match_history string
+        """
+
+        super().__init__(**kwargs)
+
+        self.match_history = match_history
+
+
+class RankingItem:
+
+    def __init__(self, *, id, group_id, number, position, rank=None, participant=None, points, properties):
+        """
+        :param id string The id of the ranking item.
+        :param group_id string The id of the group associated to this ranking.
+        :param number integer A number used as relative identifier within the ranking. It is determined from the seed attributed to the participant during the placement.
+        :param position integer A position used for presentation purposes. It is always unique within the same ranking.
+        :param rank integer The ranking of the participant in the ranking. Multiple participants can share the same rank if they are tied after involving all configured tiebreakers.
+        :param participant
+        :param points integer A number of points acquired by the participant in the ranking.
+        :param properties object A list of ranking metrics (see ranking properties).
+        """
+
+        self.id = int(id)
+        self.group_id = int(group_id)
+        self.number = number
+        self.position = position
+        self.rank = rank
+        self.participant = Participant(**participant) if participant else None
+        self.points = points
+
+        if properties.get('score_for') and properties.get('score_against') and properties.get('score_difference'):
+            self.properties = RankingItemPropertiesWithScore(**properties)
+        elif properties.get('match_history'):
+            self.properties = RankingItemPropertiesSwiss(**properties)
+        else:
+            self.properties = RankingItemProperties(**properties)

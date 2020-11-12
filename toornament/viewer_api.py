@@ -501,3 +501,44 @@ class SyncViewerAPI(SyncToornamentConnection):
         content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
 
         return Playlist(**content)
+
+    def get_ranking_items(self, tournament_id, stage_id, *, range: Range, group_ids: Optional[list]=None, group_numbers: Optional[list]=None):
+        """Retrieve ranking items of a stage and tournament.
+        Returns ranking items of a stage with a small summary of the associated participant in the ranking. The items are always ordered by ascending position.
+
+        :param range: A range of requested items using the 'items' unit. The size of the range can not exceed 50. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
+        :param tournament_id: The id of the tournament you want to retrieve data about.
+        :param stage_id: The id of the stage you want to retrieve data about.
+        :param group_ids: A list of group ids to filter.
+        :param group_numbers: A list of group numbers to filter."""
+
+        tournament_id = str(tournament_id)
+        stage_id = str(stage_id)
+        group_ids = [str(e) for e in group_ids] if group_ids else group_ids
+
+        method = 'GET'
+
+        path = '/tournaments/{tournament_id}/stages/{stage_id}/ranking-items'
+
+        path_mapping = {
+            'tournament_id': tournament_id,
+            'stage_id': stage_id,
+        }
+
+        query_parameters = {
+        }
+        if group_ids:
+            query_parameters['group_ids'] = group_ids
+        if group_numbers:
+            query_parameters['group_numbers'] = group_numbers
+
+        if not range.unit:
+            range.unit = 'items'
+
+        headers = {
+            'Range': range.get_header_value(),
+        }
+
+        content = self._simple_access(method, path, path_parameters = path_mapping, query_parameters = query_parameters, headers = headers)
+
+        return [RankingItem(**item) for item in content]
