@@ -5,8 +5,10 @@ import aiohttp
 
 class AbstractToornamentConnection(metaclass=ABCMeta):
 
-    def __init__(self, token):
-        self.token = token
+    def __init__(self, x_api_key):
+        """Generates a new Connection to Toornament.
+        :param x_api_key The API Key for simple Authentication."""
+        self.token = x_api_key
 
     @staticmethod
     @abstractmethod
