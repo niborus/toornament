@@ -3,6 +3,11 @@ from tests.local_file import TOKEN
 import asyncio
 
 
+class TestFailed(Exception):
+    """Test failed"""
+    pass
+
+
 def sync_test():
     t = toornament.SyncViewerAPI(TOKEN)
 
@@ -174,9 +179,16 @@ async def async_test():
     res = await t.get_tournaments_by_playlist(4092769699448848384, range = toornament.Range(0, 2))
     print(res)
 
+
+def internal_test():
+    pass
+
 # Test Sync Access
 sync_test()
 
 # Test Async Access
 loop = asyncio.get_event_loop()
 res = loop.run_until_complete(async_test())
+
+# Test internal functions
+internal_test()
