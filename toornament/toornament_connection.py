@@ -19,6 +19,11 @@ class SyncToornamentConnection(metaclass=ABCMeta):
 
         url = self._base_url() + path.format(**path_parameters)
 
+        if query_parameters:
+            for name, param in query_parameters.items():
+                if isinstance(param, list):
+                    query_parameters[name] = ','.join(param)
+
         response = requests.request(method, url, headers = headers, params = query_parameters)
 
         response.raise_for_status()
