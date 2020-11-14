@@ -66,7 +66,7 @@ def sync_test():
     res = t.get_stage(3555729080809455616, 3555733280880140288)
     print(res)
 
-    res = t.get_standings(range = toornament.Range(0, 9), tournament_ids = [3555729080809455616])
+    res = t.get_standings(range = toornament.Range(0, 9), tournament_ids = [3555729080809455616, '1755617972580818944'])
     print(res)
 
     res = t.get_videos(3555729080809455616, range = toornament.Range(0, 49))
