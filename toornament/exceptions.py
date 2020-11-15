@@ -21,3 +21,16 @@ class UnknownScope(ScopeError):
             m = "The scope(s) `{}` is unknown.".format(unknown_scope)
 
         super().__init__(m)
+
+
+class MissingScope(ScopeError):
+    """Raised if a endpoint gets called but the scope was not provided."""
+
+    def __init__(self, unknown_scope=None):
+        self.unknown_scope = unknown_scope
+        if unknown_scope is None:
+            m = "A Scope was not requested."
+        else:
+            m = "The scope `{}` was not requested.".format(unknown_scope)
+
+        super().__init__(m)

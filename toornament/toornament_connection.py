@@ -4,8 +4,10 @@ import aiohttp
 from typing import Optional
 from collections.abc import Iterable
 from .information import Scopes
-from .exceptions import UnknownScope
+from .exceptions import UnknownScope, MissingScope
 from time import time
+from .functions_dictionary_helper import ParameterType
+from .api_functions_doc import FUNCTIONS
 
 
 def make_scopes_to_set(scopes) -> set:
@@ -20,7 +22,8 @@ def make_scopes_to_set(scopes) -> set:
 
 
 class BearerToken:
-    def __init__(self, access_token, *, expires: Optional[int] = None, expires_in: Optional[int] = None, scope: Optional, token_type=None):
+    def __init__(self, access_token, *, expires: Optional[int] = None, expires_in: Optional[int] = None,
+                 scope: Optional, token_type=None):
         """A Bearer Token.
         :param access_token The Bearer Token.
         :param scope The scopes of that Token.
@@ -36,12 +39,14 @@ class BearerToken:
         elif expires_in:
             self.expires = int(time()) + expires_in
         else:
-            self.expires = int(time()) + 90000  # These are around 25 hours and the normal standard expiring time of Toornament Bearer Tokens.
+            self.expires = int(
+                time()) + 90000  # These are around 25 hours and the normal standard expiring time of Toornament Bearer Tokens.
 
 
 class AbstractToornamentConnection(metaclass = ABCMeta):
 
-    def __init__(self, x_api_key, *, client_id=None, client_secret=None, scopes=None, bearer: Optional[BearerToken]=None, scope_check=True):
+    def __init__(self, x_api_key, *, client_id=None, client_secret=None, scopes=None,
+                 bearer: Optional[BearerToken] = None, scope_check=True):
         """Generates a new Connection to Toornament.
         :param x_api_key The API Key for simple Authentication.
         :param client_id Your application's client id.
@@ -53,7 +58,7 @@ class AbstractToornamentConnection(metaclass = ABCMeta):
         self.scope_check = scope_check
         self.client_id = client_id
         self.client_secret = client_secret
-        self.bearer = BearerToken
+        self.bearer = bearer
 
         # Resolve Scopes
         if scopes is None:
@@ -63,7 +68,7 @@ class AbstractToornamentConnection(metaclass = ABCMeta):
         else:
             raise TypeError('scopes has to be None, str or Iterable of str. Got {}'.format(type(scopes)))
 
-        if scope_check:
+        if scope_check and self.scopes:
             unknown_scopes = [scope for scope in self.scopes if scope not in Scopes.LIST_WITH_SCOPES]
             if unknown_scopes:
                 raise UnknownScope(unknown_scopes)
@@ -79,9 +84,12 @@ class AbstractToornamentConnection(metaclass = ABCMeta):
         """:returns The Base-URL of the API"""
 
     def _create_request_arguments(self, method, path, *, path_parameters, query_parameters, headers, json=None,
-                                  request_arguments=None) -> dict:
+                                  request_arguments=None, authorization=False) -> dict:
 
         headers['X-Api-Key'] = self.token
+
+        if authorization:
+            headers['Authorization'] = 'Bearer {access_token}'.format(access_token = self.bearer.token)
 
         if request_arguments is None:
             request_arguments = {}
@@ -119,17 +127,109 @@ class AbstractToornamentConnection(metaclass = ABCMeta):
             }
         }
 
+    def _prepare_request(self, function_name, *, request_arguments: Optional[dict]=None, parameter: dict):
+        """Prepares the request.
+        This function has no blocking elements and can be used in async and sync parts.
+        :returns A Dict with parameters for request.request and aiohttp.ClientSession.request.
+        :param function_name The Name of the Function to look up the Parameters in the dict.
+        :param request_arguments Arguments given by the user to add to request.request or aiohttp.ClientSession.request.
+        :param parameter A dict with Parameters of the Endpoint."""
+
+        # Gets a dict with Attributes of the Parameters of the Endpoint
+        required_parameters = FUNCTIONS[function_name]['parameters']
+
+        # In sorted_parameters the parameters get sorted by there type.
+        # All types and there order can be found in toornament/functions_dictionary_helper.py/ParameterType
+        sorted_parameters = [{}, {}, {}, {}]
+
+        # Iterates through all given parameters, sort them into sorted_parameters, and manipulate them, if necessary
+        for parameter_name, parameter_value in parameter.items():
+
+            # parameter_attributes are the attributes, that this parameter has.
+            parameter_attributes = required_parameters[parameter_name]
+
+            # Parameters that are None and Optional will be ignored and won't show up in the request.
+            # If a Parameter is not optional or not None, it will get sorted.
+            if not parameter_attributes['optional'] or parameter_value is not None:
+
+                # If the Parameter expects a list, every individual value gets Converted
+                if parameter_attributes['list']:
+                    # Manipulate every element of the parameter with their Converter Function.
+                    # Most of the time, this converts the value to a string or does nothing. Other Converters exist.
+                    new_parameter_value = [parameter_attributes['converter'](element) for element in parameter_value]
+                else:
+                    # Manipulate the parameter with their Converter Function.
+                    # Most of the time, this converts the value to a string or does nothing. Other Converters exist.
+                    new_parameter_value = parameter_attributes['converter'](parameter_value)
+
+                # If the parameter is a range, then the value has to be formatted again, turning it from
+                # `x-y` to `type=x-y`.
+                if parameter_name == 'range':
+                    sorted_parameters[ParameterType.HEADER][parameter_name.capitalize()] = '{}={}'.format(
+                        FUNCTIONS[function_name]['range'], new_parameter_value)
+                # If the parameter is from type Header, the Name of the Parameters has to get capitalize.
+                elif parameter_attributes['type'] == ParameterType.HEADER:
+                    sorted_parameters[ParameterType.HEADER][parameter_name.capitalize()] = new_parameter_value
+                # In any other case, the parameter can be added to the sorted_dict
+                else:
+                    sorted_parameters[parameter_attributes['type']][parameter_name] = new_parameter_value
+
+        # If there aren't any JSON-Parameters, don't send a JSON, body.
+        if sorted_parameters[ParameterType.JSON]:
+            json = sorted_parameters[ParameterType.JSON]
+        else:
+            json = None
+
+        # Get Scopes of the Endpoint.
+        scope = FUNCTIONS[function_name].get('scope')
+        # If the Endpoint don't have any scopes, it is a simple request. Otherwise, it's a authorized_request
+        if scope and self.scope_check and scope not in self.bearer.scopes:
+            raise MissingScope(scope)
+
+        # Giving sorted parameters and known attributes receive and return a dict for request.
+        return self._create_request_arguments(
+            method = FUNCTIONS[function_name]['method'],
+            path = FUNCTIONS[function_name]['path'],
+            headers = sorted_parameters[ParameterType.HEADER],
+            path_parameters = sorted_parameters[ParameterType.PATH],
+            query_parameters = sorted_parameters[ParameterType.QUERY],
+            json = json,
+            request_arguments = request_arguments,
+            authorization = bool(scope),
+        )
+
+    @staticmethod
+    def _build_class_from_response(function_name, response: dict):
+        """Builds a Class from the response."""
+
+        if not response:
+            return None
+
+        converter_function = FUNCTIONS[function_name]['response']['converter']
+        is_list = FUNCTIONS[function_name]['response']['list']
+
+        if is_list:
+            return [converter_function(**element) for element in response]
+        else:
+            return converter_function(**response)
+
 
 class SyncToornamentConnection(AbstractToornamentConnection, metaclass = ABCMeta):
 
-    def _simple_access(self, *args, **kwargs) -> dict:
-        request_arguments = self._create_request_arguments(*args, **kwargs)
+    def _simple_access(self, *args, **kwargs):
+        request_arguments = self._prepare_request(*args, **kwargs)
 
         response = requests.request(**request_arguments)
 
         response.raise_for_status()
 
-        return response.json()
+        if response.status_code == 204:
+            return None
+        else:
+            return response.json()
+
+    def _authorized_access(self, *args, **kwargs):
+        return self._simple_access(self, *args, **kwargs)
 
     def request_bearer_token(self) -> BearerToken:
         request_arguments = self._create_bearer_token_request_arguments()
@@ -143,16 +243,33 @@ class SyncToornamentConnection(AbstractToornamentConnection, metaclass = ABCMeta
     def refresh_bearer_token(self):
         self.bearer = self.request_bearer_token()
 
+    def _access(self, function_name, request_arguments, **parameter):
+        """Sends a request to the API.
+        This Part of function checks weather to use Authorized Access or Simple Access and Calls the Function."""
+
+        if FUNCTIONS[function_name].get('scope'):
+            response = self._authorized_access(function_name, request_arguments = request_arguments, parameter = parameter)
+        else:
+            response = self._simple_access(function_name, request_arguments = request_arguments, parameter = parameter)
+
+        return self._build_class_from_response(function_name, response)
+
 
 class AsyncToornamentConnection(AbstractToornamentConnection, metaclass = ABCMeta):
 
-    async def _simple_access(self, *args, **kwargs) -> dict:
-        request_arguments = self._create_request_arguments(*args, **kwargs)
+    async def _simple_access(self, *args, **kwargs):
+        request_arguments = self._prepare_request(*args, **kwargs)
 
         async with aiohttp.ClientSession() as session:
             async with session.request(**request_arguments) as response:
                 response.raise_for_status()
-                return await response.json()
+                if response.status == 204:
+                    return None
+                else:
+                    return await response.json()
+
+    async def _authorized_access(self, *args, **kwargs):
+        return await self._simple_access(self, *args, **kwargs)
 
     async def request_bearer_token(self) -> BearerToken:
         request_arguments = self._create_bearer_token_request_arguments()
@@ -165,3 +282,14 @@ class AsyncToornamentConnection(AbstractToornamentConnection, metaclass = ABCMet
 
     async def refresh_bearer_token(self):
         self.bearer = await self.request_bearer_token()
+
+    async def _access(self, function_name, request_arguments, **parameter):
+        """Sends a request to the API.
+        This Part of function checks weather to use Authorized Access or Simple Access and Calls the Function."""
+
+        if FUNCTIONS[function_name].get('scope'):
+            response = await self._authorized_access(function_name, request_arguments = request_arguments, parameter = parameter)
+        else:
+            response = await self._simple_access(function_name, request_arguments = request_arguments, parameter = parameter)
+
+        return self._build_class_from_response(function_name, response)

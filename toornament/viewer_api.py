@@ -1,8 +1,6 @@
 from .toornament_connection import SyncToornamentConnection, AsyncToornamentConnection
-from .viewer_schemas import *
 from typing import Optional, List
 from .range import Range
-from .request_preparer import prepare_request
 
 
 class SyncViewerAPI(SyncToornamentConnection):
@@ -18,15 +16,11 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param tournament_id: The id of the tournament you want to retrieve data about.
         :param id: The id of the match to retrieve."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_match', request_arguments,
             tournament_id = tournament_id,
             id = id,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return MatchDetailed(**content)
 
     def get_matches_from_tournament(self, tournament_id, *, range: Range, stage_ids: Optional[list] = None,
                                     stage_numbers: Optional[list] = None, group_ids: Optional[list] = None,
@@ -53,7 +47,7 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param participant_ids: One or several participant ids involved in the matches to filter.
         :param sort: A method to sort the filtered data. "structure" sorts using the stage, group, round and match numbers. "schedule" sorts using the scheduled date. "latest results" sorts using the date at which the matches were played (not scheduled)."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_matches_from_tournament', request_arguments,
             tournament_id = tournament_id,
             range = range,
@@ -70,10 +64,6 @@ class SyncViewerAPI(SyncToornamentConnection):
             participant_ids = participant_ids,
             sort = sort,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return [Match(**match) for match in content]
 
     def get_matches_from_discipline(self, discipline_id, *, range: Range, is_featured: Optional[bool] = None,
                                     statuses: Optional[list] = None, scheduled_before: Optional[str] = None,
@@ -93,7 +83,7 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param tournament_ids: List of tournament IDs to filter the data with.
         :param sort: A method to sort the filtered data. "structure" sorts using the stage, group, round and match numbers. "schedule" sorts using the scheduled date. "latest results" sorts using the date at which the matches were played (not scheduled)."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_matches_from_discipline', request_arguments,
             discipline_id = discipline_id,
             range = range,
@@ -105,10 +95,6 @@ class SyncViewerAPI(SyncToornamentConnection):
             tournament_ids = tournament_ids,
             sort = sort,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return [MatchDiscipline(**match) for match in content]
 
     def get_bracket_nodes(self, tournament_id, stage_id, *, range: Range, group_ids: Optional[list] = None,
                           group_numbers: Optional[list] = None, round_ids: Optional[list] = None,
@@ -127,7 +113,7 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param min_depth: A minimum depth to filter.
         :param max_depth: A maximal depth to filter."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_bracket_nodes', request_arguments,
             tournament_id = tournament_id,
             stage_id = stage_id,
@@ -140,10 +126,6 @@ class SyncViewerAPI(SyncToornamentConnection):
             max_depth = max_depth,
         )
 
-        content = self._simple_access(**access_arguments)
-
-        return [BracketNode(**node) for node in content]
-
     def get_custom_fields(self, tournament_id, *, target_type: Optional[str] = None, **request_arguments):
         """Retrieves custom fields of a tournament.
         Returns the complete definition of all custom fields for a given tournament. This includes both public and private custom fields.
@@ -152,15 +134,11 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param tournament_id: The id of the tournament you want to retrieve data about.
         :param target_type: The entity affected by the custom fields."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_custom_fields', request_arguments,
             tournament_id = tournament_id,
             target_type = target_type,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return [CustomField(**field) for field in content]
 
     def get_disciplines(self, *, range: Range, **request_arguments):
         """Retrieve the list of available disciplines and their basic information.
@@ -170,14 +148,10 @@ class SyncViewerAPI(SyncToornamentConnection):
         A range of requested items using the 'disciplines' unit.
         The size of the range can not exceed 50. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))"""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_disciplines', request_arguments,
             range = range,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return [Discipline(**discipline) for discipline in content]
 
     def get_discipline(self, id, **request_arguments):
         """Retrieve a specific discipline, with advanced information.
@@ -185,14 +159,10 @@ class SyncViewerAPI(SyncToornamentConnection):
 
         :param id: The string id of the discipline."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_discipline', request_arguments,
             id = id,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return DisciplineDetailed(**content)
 
     def get_groups(self, tournament_id, *, range: Range, stage_ids: Optional[list] = None,
                    stage_numbers: Optional[list] = None, **request_arguments):
@@ -204,17 +174,13 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param stage_ids: A list of stage ids to filter.
         :param stage_numbers: A list of stage numbers to filter."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_groups', request_arguments,
             tournament_id = tournament_id,
             range = range,
             stage_ids = stage_ids,
             stage_numbers = stage_numbers,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return [Group(**group) for group in content]
 
     def get_group(self, tournament_id, id, **request_arguments):
         """Retrieve a single group of a tournament.
@@ -223,15 +189,11 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param tournament_id: The id of the tournament you want to retrieve data about.
         :param id: The id of the group to retrieve."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_group', request_arguments,
             tournament_id = tournament_id,
             id = id,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return Group(**content)
 
     def get_game(self, tournament_id, match_id, number, **request_arguments):
         """Retrieve a single game of a match.
@@ -241,16 +203,12 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param match_id: The id of the match to retrieve.
         :param number: The relative identifier of the match game to retrieve."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_game', request_arguments,
             tournament_id = tournament_id,
             match_id = match_id,
             number = number,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return Game(**content)
 
     def get_participants(self, tournament_id, *, range: Range, name: Optional[str] = None, sort: Optional[str] = None,
                          **request_arguments):
@@ -262,19 +220,13 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param name: The string to be looked for in the name of the participant.
         :param sort: A method to sort the filtered data. “created_asc” and “created_desc” sort the participants from their creation date (earliest to latest, and inversely). “Alphabetic” sorts the participants using their case-insensitive names."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_participants', request_arguments,
             tournament_id = tournament_id,
             range = range,
             name = name,
             sort = sort,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return [
-            ParticipantPlayer(**participant) if participant.get('lineup') is None else ParticipantTeam(**participant)
-            for participant in content]
 
     def get_participant(self, tournament_id, id, **request_arguments):
         """Retrieve a single participant of a tournament.
@@ -283,15 +235,11 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param tournament_id: The id of the tournament the participants are from.
         :param id: The id of the participant to retrieve."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_participant', request_arguments,
             tournament_id = tournament_id,
             id = id,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return ParticipantPlayer(**content) if content.get('lineup') is None else ParticipantTeam(**content)
 
     def get_playlist(self, id, **request_arguments):
         """Retrieve a single playlist.
@@ -299,14 +247,10 @@ class SyncViewerAPI(SyncToornamentConnection):
 
         :param id: The id of the playlist to retrieve."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_playlist', request_arguments,
             id = id,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return Playlist(**content)
 
     def get_ranking_items(self, tournament_id, stage_id, *, range: Range, group_ids: Optional[list] = None,
                           group_numbers: Optional[list] = None, **request_arguments):
@@ -319,7 +263,7 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param group_ids: A list of group ids to filter.
         :param group_numbers: A list of group numbers to filter."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_ranking_items', request_arguments,
             tournament_id = tournament_id,
             stage_id = stage_id,
@@ -327,10 +271,6 @@ class SyncViewerAPI(SyncToornamentConnection):
             group_ids = group_ids,
             group_numbers = group_numbers,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return [RankingItem(**item) for item in content]
 
     def get_rounds(self, tournament_id, *, range: Range, stage_ids: Optional[list] = None,
                    stage_numbers: Optional[list] = None, group_ids: Optional[list] = None,
@@ -345,7 +285,7 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param group_ids: A list of group ids to filter.
         :param group_numbers: A list of group numbers to filter."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_rounds', request_arguments,
             tournament_id = tournament_id,
             range = range,
@@ -355,10 +295,6 @@ class SyncViewerAPI(SyncToornamentConnection):
             group_numbers = group_numbers,
         )
 
-        content = self._simple_access(**access_arguments)
-
-        return [Round(**round) for round in content]
-
     def get_round(self, tournament_id, id, **request_arguments):
         """Retrieve a single round of a tournament.
         Returns a round with the given id with basic information and settings.
@@ -366,15 +302,11 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param tournament_id: The id of the tournament you want to retrieve data about.
         :param id: The id of the round to retrieve."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_round', request_arguments,
             tournament_id = tournament_id,
             id = id,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return Round(**content)
 
     def get_stages(self, tournament_id, **request_arguments):
         """Retrieve all stages of a tournament.
@@ -382,14 +314,10 @@ class SyncViewerAPI(SyncToornamentConnection):
 
         :param tournament_id: The id of the tournament you want to retrieve data about."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_stages', request_arguments,
             tournament_id = tournament_id,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return [Stage(**stage) for stage in content]
 
     def get_stage(self, tournament_id, id, **request_arguments):
         """Retrieve a single stage of a tournament.
@@ -398,15 +326,11 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param tournament_id: The id of the tournament you want to retrieve data about.
         :param id: The id of the stage to retrieve."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_stage', request_arguments,
             tournament_id = tournament_id,
             id = id,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return Stage(**content)
 
     def get_standings(self, *, range: Range, tournament_ids: list, participant_ids: Optional[list] = None,
                       **request_arguments):
@@ -417,16 +341,12 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param tournament_ids: Only return tournaments for the given list of ids.
         :param participant_ids: One or several participant ids involved in the standings to filter."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_standings', request_arguments,
             range = range,
             tournament_ids = tournament_ids,
             participant_ids = participant_ids,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return [StandingItem(**item) for item in content]
 
     def get_streams(self, tournament_id, *, range: Range, match_ids: Optional[list] = None, **request_arguments):
         """Retrieves available streams.
@@ -436,16 +356,12 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param range: A range of requested items using the 'streams' unit. The size of the range can not exceed 50. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
         :param match_ids: A list of match ids to filter."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_streams', request_arguments,
             tournament_id = tournament_id,
             range = range,
             match_ids = match_ids,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return [Stream(**stream) for stream in content]
 
     def get_videos(self, tournament_id, *, range: Range, participant_ids: Optional[list] = None,
                    category: Optional[str] = None, sort: Optional[str] = None, **request_arguments):
@@ -458,7 +374,7 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param category: The category of the videos.
         :param sort: Sorts the collection in a particular order. "created_asc" sorts the videos from the oldest to the most recent one; "created_desc" sorts the videos from the most recent to the oldest one."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_videos', request_arguments,
             tournament_id = tournament_id,
             range = range,
@@ -466,10 +382,6 @@ class SyncViewerAPI(SyncToornamentConnection):
             category = category,
             sort = sort,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return [VideoTournament(**video) for video in content]
 
     def get_videos_by_match(self, tournament_id, match_id, *, category: Optional[str] = None,
                             sort: Optional[str] = None, **request_arguments):
@@ -481,17 +393,13 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param category: The category of the videos.
         :param sort: Sorts the collection in a particular order. "created_asc" sorts the videos from the oldest to the most recent one; "created_desc" sorts the videos from the most recent to the oldest one."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_videos_by_match', request_arguments,
             tournament_id = tournament_id,
             match_id = match_id,
             category = category,
             sort = sort,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return [Video(**video) for video in content]
 
     def get_tournaments_featured(self, *, range: Range, name: Optional[str] = None, disciplines: Optional[str] = None,
                                  statuses: Optional[str] = None, scheduled_before: Optional[str] = None,
@@ -512,7 +420,7 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param is_online: Whether the tournament is played online.
         :param sort: Sorts the collection in a particular order. "scheduled_asc" sorts the tournaments by scheduled date from the oldest to the most recent one; "scheduled_desc" sorts the tournaments by scheduled date from the most recent to the oldest one."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_tournaments_featured', request_arguments,
             range = range,
             name = name,
@@ -526,24 +434,16 @@ class SyncViewerAPI(SyncToornamentConnection):
             sort = sort,
         )
 
-        content = self._simple_access(**access_arguments)
-
-        return [Tournament(**tour) for tour in content]
-
     def get_tournament(self, id, **request_arguments):
         """Retrieve a single tournament.
         Returns a tournament identified with the given id.
 
         :param id: The id of the tournament to retrieve."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_tournament', request_arguments,
             id = id,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return TournamentDetailed(**content)
 
     def get_tournaments_by_playlist(self, id, *, range: Range, name: Optional[str] = None,
                                     disciplines: Optional[str] = None, statuses: Optional[str] = None,
@@ -565,7 +465,7 @@ class SyncViewerAPI(SyncToornamentConnection):
         :param is_online: Whether the tournament is played online.
         :param sort: Sorts the collection in a particular order. "scheduled_asc" sorts the tournaments by scheduled date from the oldest to the most recent one; "scheduled_desc" sorts the tournaments by scheduled date from the most recent to the oldest one."""
 
-        access_arguments = prepare_request(
+        return self._access(
             'viewer_get_tournaments_by_playlist', request_arguments,
             id = id,
             range = range,
@@ -579,10 +479,6 @@ class SyncViewerAPI(SyncToornamentConnection):
             is_online = is_online,
             sort = sort,
         )
-
-        content = self._simple_access(**access_arguments)
-
-        return [Tournament(**tour) for tour in content]
 
 
 class AsyncViewerAPI(AsyncToornamentConnection):
@@ -598,15 +494,11 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param tournament_id: The id of the tournament you want to retrieve data about.
         :param id: The id of the match to retrieve."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_match', request_arguments,
             tournament_id = tournament_id,
             id = id,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return MatchDetailed(**content)
 
     async def get_matches_from_tournament(self, tournament_id, *, range: Range, stage_ids: Optional[list] = None,
                                     stage_numbers: Optional[list] = None, group_ids: Optional[list] = None,
@@ -633,7 +525,7 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param participant_ids: One or several participant ids involved in the matches to filter.
         :param sort: A method to sort the filtered data. "structure" sorts using the stage, group, round and match numbers. "schedule" sorts using the scheduled date. "latest results" sorts using the date at which the matches were played (not scheduled)."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_matches_from_tournament', request_arguments,
             tournament_id = tournament_id,
             range = range,
@@ -650,10 +542,6 @@ class AsyncViewerAPI(AsyncToornamentConnection):
             participant_ids = participant_ids,
             sort = sort,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return [Match(**match) for match in content]
 
     async def get_matches_from_discipline(self, discipline_id, *, range: Range, is_featured: Optional[bool] = None,
                                     statuses: Optional[list] = None, scheduled_before: Optional[str] = None,
@@ -673,7 +561,7 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param tournament_ids: List of tournament IDs to filter the data with.
         :param sort: A method to sort the filtered data. "structure" sorts using the stage, group, round and match numbers. "schedule" sorts using the scheduled date. "latest results" sorts using the date at which the matches were played (not scheduled)."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_matches_from_discipline', request_arguments,
             discipline_id = discipline_id,
             range = range,
@@ -685,10 +573,6 @@ class AsyncViewerAPI(AsyncToornamentConnection):
             tournament_ids = tournament_ids,
             sort = sort,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return [MatchDiscipline(**match) for match in content]
 
     async def get_bracket_nodes(self, tournament_id, stage_id, *, range: Range, group_ids: Optional[list] = None,
                           group_numbers: Optional[list] = None, round_ids: Optional[list] = None,
@@ -707,7 +591,7 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param min_depth: A minimum depth to filter.
         :param max_depth: A maximal depth to filter."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_bracket_nodes', request_arguments,
             tournament_id = tournament_id,
             stage_id = stage_id,
@@ -720,10 +604,6 @@ class AsyncViewerAPI(AsyncToornamentConnection):
             max_depth = max_depth,
         )
 
-        content = await self._simple_access(**access_arguments)
-
-        return [BracketNode(**node) for node in content]
-
     async def get_custom_fields(self, tournament_id, *, target_type: Optional[str] = None, **request_arguments):
         """Retrieves custom fields of a tournament.
         Returns the complete definition of all custom fields for a given tournament. This includes both public and private custom fields.
@@ -732,15 +612,11 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param tournament_id: The id of the tournament you want to retrieve data about.
         :param target_type: The entity affected by the custom fields."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_custom_fields', request_arguments,
             tournament_id = tournament_id,
             target_type = target_type,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return [CustomField(**field) for field in content]
 
     async def get_disciplines(self, *, range: Range, **request_arguments):
         """Retrieve the list of available disciplines and their basic information.
@@ -750,14 +626,10 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         A range of requested items using the 'disciplines' unit.
         The size of the range can not exceed 50. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))"""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_disciplines', request_arguments,
             range = range,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return [Discipline(**discipline) for discipline in content]
 
     async def get_discipline(self, id, **request_arguments):
         """Retrieve a specific discipline, with advanced information.
@@ -765,14 +637,10 @@ class AsyncViewerAPI(AsyncToornamentConnection):
 
         :param id: The string id of the discipline."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_discipline', request_arguments,
             id = id,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return DisciplineDetailed(**content)
 
     async def get_groups(self, tournament_id, *, range: Range, stage_ids: Optional[list] = None,
                    stage_numbers: Optional[list] = None, **request_arguments):
@@ -784,17 +652,13 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param stage_ids: A list of stage ids to filter.
         :param stage_numbers: A list of stage numbers to filter."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_groups', request_arguments,
             tournament_id = tournament_id,
             range = range,
             stage_ids = stage_ids,
             stage_numbers = stage_numbers,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return [Group(**group) for group in content]
 
     async def get_group(self, tournament_id, id, **request_arguments):
         """Retrieve a single group of a tournament.
@@ -803,15 +667,11 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param tournament_id: The id of the tournament you want to retrieve data about.
         :param id: The id of the group to retrieve."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_group', request_arguments,
             tournament_id = tournament_id,
             id = id,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return Group(**content)
 
     async def get_game(self, tournament_id, match_id, number, **request_arguments):
         """Retrieve a single game of a match.
@@ -821,16 +681,12 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param match_id: The id of the match to retrieve.
         :param number: The relative identifier of the match game to retrieve."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_game', request_arguments,
             tournament_id = tournament_id,
             match_id = match_id,
             number = number,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return Game(**content)
 
     async def get_participants(self, tournament_id, *, range: Range, name: Optional[str] = None, sort: Optional[str] = None,
                          **request_arguments):
@@ -842,19 +698,13 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param name: The string to be looked for in the name of the participant.
         :param sort: A method to sort the filtered data. “created_asc” and “created_desc” sort the participants from their creation date (earliest to latest, and inversely). “Alphabetic” sorts the participants using their case-insensitive names."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_participants', request_arguments,
             tournament_id = tournament_id,
             range = range,
             name = name,
             sort = sort,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return [
-            ParticipantPlayer(**participant) if participant.get('lineup') is None else ParticipantTeam(**participant)
-            for participant in content]
 
     async def get_participant(self, tournament_id, id, **request_arguments):
         """Retrieve a single participant of a tournament.
@@ -863,15 +713,11 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param tournament_id: The id of the tournament the participants are from.
         :param id: The id of the participant to retrieve."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_participant', request_arguments,
             tournament_id = tournament_id,
             id = id,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return ParticipantPlayer(**content) if content.get('lineup') is None else ParticipantTeam(**content)
 
     async def get_playlist(self, id, **request_arguments):
         """Retrieve a single playlist.
@@ -879,14 +725,10 @@ class AsyncViewerAPI(AsyncToornamentConnection):
 
         :param id: The id of the playlist to retrieve."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_playlist', request_arguments,
             id = id,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return Playlist(**content)
 
     async def get_ranking_items(self, tournament_id, stage_id, *, range: Range, group_ids: Optional[list] = None,
                           group_numbers: Optional[list] = None, **request_arguments):
@@ -899,7 +741,7 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param group_ids: A list of group ids to filter.
         :param group_numbers: A list of group numbers to filter."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_ranking_items', request_arguments,
             tournament_id = tournament_id,
             stage_id = stage_id,
@@ -907,10 +749,6 @@ class AsyncViewerAPI(AsyncToornamentConnection):
             group_ids = group_ids,
             group_numbers = group_numbers,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return [RankingItem(**item) for item in content]
 
     async def get_rounds(self, tournament_id, *, range: Range, stage_ids: Optional[list] = None,
                    stage_numbers: Optional[list] = None, group_ids: Optional[list] = None,
@@ -925,7 +763,7 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param group_ids: A list of group ids to filter.
         :param group_numbers: A list of group numbers to filter."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_rounds', request_arguments,
             tournament_id = tournament_id,
             range = range,
@@ -935,10 +773,6 @@ class AsyncViewerAPI(AsyncToornamentConnection):
             group_numbers = group_numbers,
         )
 
-        content = await self._simple_access(**access_arguments)
-
-        return [Round(**round) for round in content]
-
     async def get_round(self, tournament_id, id, **request_arguments):
         """Retrieve a single round of a tournament.
         Returns a round with the given id with basic information and settings.
@@ -946,15 +780,11 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param tournament_id: The id of the tournament you want to retrieve data about.
         :param id: The id of the round to retrieve."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_round', request_arguments,
             tournament_id = tournament_id,
             id = id,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return Round(**content)
 
     async def get_stages(self, tournament_id, **request_arguments):
         """Retrieve all stages of a tournament.
@@ -962,14 +792,10 @@ class AsyncViewerAPI(AsyncToornamentConnection):
 
         :param tournament_id: The id of the tournament you want to retrieve data about."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_stages', request_arguments,
             tournament_id = tournament_id,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return [Stage(**stage) for stage in content]
 
     async def get_stage(self, tournament_id, id, **request_arguments):
         """Retrieve a single stage of a tournament.
@@ -978,15 +804,11 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param tournament_id: The id of the tournament you want to retrieve data about.
         :param id: The id of the stage to retrieve."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_stage', request_arguments,
             tournament_id = tournament_id,
             id = id,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return Stage(**content)
 
     async def get_standings(self, *, range: Range, tournament_ids: list, participant_ids: Optional[list] = None,
                       **request_arguments):
@@ -997,16 +819,12 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param tournament_ids: Only return tournaments for the given list of ids.
         :param participant_ids: One or several participant ids involved in the standings to filter."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_standings', request_arguments,
             range = range,
             tournament_ids = tournament_ids,
             participant_ids = participant_ids,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return [StandingItem(**item) for item in content]
 
     async def get_streams(self, tournament_id, *, range: Range, match_ids: Optional[list] = None, **request_arguments):
         """Retrieves available streams.
@@ -1016,16 +834,12 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param range: A range of requested items using the 'streams' unit. The size of the range can not exceed 50. (see [Pagination](https://developer.toornament.com/v2/overview/pagination))
         :param match_ids: A list of match ids to filter."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_streams', request_arguments,
             tournament_id = tournament_id,
             range = range,
             match_ids = match_ids,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return [Stream(**stream) for stream in content]
 
     async def get_videos(self, tournament_id, *, range: Range, participant_ids: Optional[list] = None,
                    category: Optional[str] = None, sort: Optional[str] = None, **request_arguments):
@@ -1038,7 +852,7 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param category: The category of the videos.
         :param sort: Sorts the collection in a particular order. "created_asc" sorts the videos from the oldest to the most recent one; "created_desc" sorts the videos from the most recent to the oldest one."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_videos', request_arguments,
             tournament_id = tournament_id,
             range = range,
@@ -1046,10 +860,6 @@ class AsyncViewerAPI(AsyncToornamentConnection):
             category = category,
             sort = sort,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return [VideoTournament(**video) for video in content]
 
     async def get_videos_by_match(self, tournament_id, match_id, *, category: Optional[str] = None,
                             sort: Optional[str] = None, **request_arguments):
@@ -1061,17 +871,13 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param category: The category of the videos.
         :param sort: Sorts the collection in a particular order. "created_asc" sorts the videos from the oldest to the most recent one; "created_desc" sorts the videos from the most recent to the oldest one."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_videos_by_match', request_arguments,
             tournament_id = tournament_id,
             match_id = match_id,
             category = category,
             sort = sort,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return [Video(**video) for video in content]
 
     async def get_tournaments_featured(self, *, range: Range, name: Optional[str] = None, disciplines: Optional[str] = None,
                                  statuses: Optional[str] = None, scheduled_before: Optional[str] = None,
@@ -1092,7 +898,7 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param is_online: Whether the tournament is played online.
         :param sort: Sorts the collection in a particular order. "scheduled_asc" sorts the tournaments by scheduled date from the oldest to the most recent one; "scheduled_desc" sorts the tournaments by scheduled date from the most recent to the oldest one."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_tournaments_featured', request_arguments,
             range = range,
             name = name,
@@ -1106,24 +912,16 @@ class AsyncViewerAPI(AsyncToornamentConnection):
             sort = sort,
         )
 
-        content = await self._simple_access(**access_arguments)
-
-        return [Tournament(**tour) for tour in content]
-
     async def get_tournament(self, id, **request_arguments):
         """Retrieve a single tournament.
         Returns a tournament identified with the given id.
 
         :param id: The id of the tournament to retrieve."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_tournament', request_arguments,
             id = id,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return TournamentDetailed(**content)
 
     async def get_tournaments_by_playlist(self, id, *, range: Range, name: Optional[str] = None,
                                     disciplines: Optional[str] = None, statuses: Optional[str] = None,
@@ -1145,7 +943,7 @@ class AsyncViewerAPI(AsyncToornamentConnection):
         :param is_online: Whether the tournament is played online.
         :param sort: Sorts the collection in a particular order. "scheduled_asc" sorts the tournaments by scheduled date from the oldest to the most recent one; "scheduled_desc" sorts the tournaments by scheduled date from the most recent to the oldest one."""
 
-        access_arguments = prepare_request(
+        return await self._access(
             'viewer_get_tournaments_by_playlist', request_arguments,
             id = id,
             range = range,
@@ -1159,7 +957,3 @@ class AsyncViewerAPI(AsyncToornamentConnection):
             is_online = is_online,
             sort = sort,
         )
-
-        content = await self._simple_access(**access_arguments)
-
-        return [Tournament(**tour) for tour in content]

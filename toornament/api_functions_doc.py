@@ -1,4 +1,5 @@
-from .functions_dictionary_helper import Converter, ParameterType
+from .functions_dictionary_helper import Converter, ParameterType, ResultConverter
+from .viewer_schemas import ViewerSchema as VS
 
 
 FUNCTIONS = {
@@ -62,6 +63,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'nodes',
         'path': '/tournaments/{tournament_id}/stages/{stage_id}/bracket-nodes',
+        'response': {
+            'list': True,
+            'converter': VS.BracketNode,
+        },
     },
     'viewer_get_custom_fields': {
         'parameters': {
@@ -81,6 +86,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/custom-fields',
+        'response': {
+            'list': True,
+            'converter': VS.CustomField,
+        },
     },
     'viewer_get_disciplines': {
         'parameters': {
@@ -94,6 +103,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'disciplines',
         'path': '/disciplines',
+        'response': {
+            'list': True,
+            'converter': VS.Discipline,
+        },
     },
     'viewer_get_discipline': {
         'parameters': {
@@ -107,6 +120,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/disciplines/{id}',
+        'response': {
+            'list': False,
+            'converter': VS.DisciplineDetailed,
+        },
     },
     'viewer_get_groups': {
         'parameters': {
@@ -138,6 +155,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'groups',
         'path': '/tournaments/{tournament_id}/groups',
+        'response': {
+            'list': True,
+            'converter': VS.Group,
+        },
     },
     'viewer_get_group': {
         'parameters': {
@@ -157,6 +178,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/groups/{id}',
+        'response': {
+            'list': False,
+            'converter': VS.Group,
+        },
     },
     'viewer_get_matches_from_tournament': {
         'parameters': {
@@ -248,6 +273,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'matches',
         'path': '/tournaments/{tournament_id}/matches',
+        'response': {
+            'list': True,
+            'converter': VS.Match,
+        },
     },
     'viewer_get_match': {
         'parameters': {
@@ -267,6 +296,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/matches/{id}',
+        'response': {
+            'list': False,
+            'converter': VS.MatchDetailed,
+        },
     },
     'viewer_get_matches_from_discipline': {
         'parameters': {
@@ -328,6 +361,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'matches',
         'path': '/disciplines/{discipline_id}/matches',
+        'response': {
+            'list': True,
+            'converter': VS.MatchDiscipline,
+        },
     },
     'viewer_get_game': {
         'parameters': {
@@ -353,6 +390,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/matches/{match_id}/games/{number}',
+        'response': {
+            'list': False,
+            'converter': VS.Game,
+        },
     },
     'viewer_get_participants': {
         'parameters': {
@@ -384,6 +425,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'participants',
         'path': '/tournaments/{tournament_id}/participants',
+        'response': {
+            'list': True,
+            'converter': ResultConverter.participant,
+        },
     },
     'viewer_get_participant': {
         'parameters': {
@@ -403,6 +448,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/participants/{id}',
+        'response': {
+            'list': False,
+            'converter': ResultConverter.participant,
+        },
     },
     'viewer_get_playlist': {
         'parameters': {
@@ -416,6 +465,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/playlists/{id}',
+        'response': {
+            'list': False,
+            'converter': VS.Playlist,
+        },
     },
     'viewer_get_ranking_items': {
         'parameters': {
@@ -453,6 +506,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'items',
         'path': '/tournaments/{tournament_id}/stages/{stage_id}/ranking-items',
+        'response': {
+            'list': True,
+            'converter': VS.RankingItem,
+        },
     },
     'viewer_get_rounds': {
         'parameters': {
@@ -496,6 +553,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'rounds',
         'path': '/tournaments/{tournament_id}/rounds',
+        'response': {
+            'list': True,
+            'converter': VS.Round,
+        },
     },
     'viewer_get_round': {
         'parameters': {
@@ -515,6 +576,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/rounds/{id}',
+        'response': {
+            'list': False,
+            'converter': VS.Round,
+        },
     },
     'viewer_get_stages': {
         'parameters': {
@@ -528,6 +593,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/stages',
+        'response': {
+            'list': True,
+            'converter': VS.Stage,
+        },
     },
     'viewer_get_stage': {
         'parameters': {
@@ -547,6 +616,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/stages/{id}',
+        'response': {
+            'list': False,
+            'converter': VS.Stage,
+        },
     },
     'viewer_get_standings': {
         'parameters': {
@@ -572,6 +645,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'items',
         'path': '/standings',
+        'response': {
+            'list': True,
+            'converter': VS.StandingItem,
+        },
     },
     'viewer_get_streams': {
         'parameters': {
@@ -597,6 +674,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'streams',
         'path': '/tournaments/{tournament_id}/streams',
+        'response': {
+            'list': True,
+            'converter': VS.Stream,
+        },
     },
     'viewer_get_tournaments_featured': {
         'parameters': {
@@ -664,6 +745,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'tournaments',
         'path': '/tournaments/featured',
+        'response': {
+            'list': True,
+            'converter': VS.Tournament,
+        },
     },
     'viewer_get_tournament': {
         'parameters': {
@@ -677,6 +762,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{id}',
+        'response': {
+            'list': False,
+            'converter': VS.TournamentDetailed,
+        },
     },
     'viewer_get_tournaments_by_playlist': {
         'parameters': {
@@ -750,6 +839,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'tournaments',
         'path': '/playlists/{id}/tournaments',
+        'response': {
+            'list': True,
+            'converter': VS.Tournament,
+        },
     },
     'viewer_get_videos': {
         'parameters': {
@@ -787,6 +880,10 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'videos',
         'path': '/tournaments/{tournament_id}/videos',
+        'response': {
+            'list': True,
+            'converter': VS.VideoTournament,
+        },
     },
     'viewer_get_videos_by_match': {
         'parameters': {
@@ -818,5 +915,9 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/matches/{match_id}/videos',
+        'response': {
+            'list': True,
+            'converter': VS.Video,
+        },
     },
 }

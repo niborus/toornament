@@ -1,3 +1,6 @@
+from .viewer_schemas import ViewerSchema
+
+
 class Converter:
 
     @staticmethod
@@ -20,6 +23,14 @@ class Converter:
     @staticmethod
     def to_datetime(attribute):
         return attribute
+
+
+class ResultConverter:
+
+    @staticmethod
+    def participant(**participant):
+        return ViewerSchema.ParticipantPlayer(**participant) if participant.get(
+            'lineup') is None else ViewerSchema.ParticipantTeam(**participant)
 
 
 class ParameterType:
