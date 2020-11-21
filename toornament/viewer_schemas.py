@@ -1,5 +1,5 @@
 from .converter import Converter
-from .schema import SchemaElement
+from .schema_element import SchemaElement
 
 
 class ViewerSchema:

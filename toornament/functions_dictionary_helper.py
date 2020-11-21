@@ -37,4 +37,3 @@ class ParameterType:
     HEADER = 0
     PATH = 1
     QUERY = 2
-    JSON = 3

@@ -1,5 +1,6 @@
 from .functions_dictionary_helper import Converter, ParameterType, ResultConverter
 from .viewer_schemas import ViewerSchema as VS
+from .organizer_schema import OrganizerSchema as OS
 
 
 FUNCTIONS = {
@@ -63,6 +64,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'nodes',
         'path': '/tournaments/{tournament_id}/stages/{stage_id}/bracket-nodes',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': True,
             'converter': VS.BracketNode,
@@ -86,6 +89,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/custom-fields',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': True,
             'converter': VS.CustomField,
@@ -103,6 +108,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'disciplines',
         'path': '/disciplines',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': True,
             'converter': VS.Discipline,
@@ -120,6 +127,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/disciplines/{id}',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': False,
             'converter': VS.DisciplineDetailed,
@@ -155,6 +164,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'groups',
         'path': '/tournaments/{tournament_id}/groups',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': True,
             'converter': VS.Group,
@@ -178,6 +189,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/groups/{id}',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': False,
             'converter': VS.Group,
@@ -273,6 +286,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'matches',
         'path': '/tournaments/{tournament_id}/matches',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': True,
             'converter': VS.Match,
@@ -296,6 +311,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/matches/{id}',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': False,
             'converter': VS.MatchDetailed,
@@ -361,6 +378,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'matches',
         'path': '/disciplines/{discipline_id}/matches',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': True,
             'converter': VS.MatchDiscipline,
@@ -390,6 +409,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/matches/{match_id}/games/{number}',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': False,
             'converter': VS.Game,
@@ -425,6 +446,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'participants',
         'path': '/tournaments/{tournament_id}/participants',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': True,
             'converter': ResultConverter.participant,
@@ -448,6 +471,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/participants/{id}',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': False,
             'converter': ResultConverter.participant,
@@ -465,6 +490,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/playlists/{id}',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': False,
             'converter': VS.Playlist,
@@ -506,6 +533,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'items',
         'path': '/tournaments/{tournament_id}/stages/{stage_id}/ranking-items',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': True,
             'converter': VS.RankingItem,
@@ -553,6 +582,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'rounds',
         'path': '/tournaments/{tournament_id}/rounds',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': True,
             'converter': VS.Round,
@@ -576,6 +607,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/rounds/{id}',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': False,
             'converter': VS.Round,
@@ -593,6 +626,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/stages',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': True,
             'converter': VS.Stage,
@@ -616,6 +651,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/stages/{id}',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': False,
             'converter': VS.Stage,
@@ -645,6 +682,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'items',
         'path': '/standings',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': True,
             'converter': VS.StandingItem,
@@ -674,6 +713,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'streams',
         'path': '/tournaments/{tournament_id}/streams',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': True,
             'converter': VS.Stream,
@@ -745,6 +786,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'tournaments',
         'path': '/tournaments/featured',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': True,
             'converter': VS.Tournament,
@@ -762,6 +805,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{id}',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': False,
             'converter': VS.TournamentDetailed,
@@ -839,6 +884,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'tournaments',
         'path': '/playlists/{id}/tournaments',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': True,
             'converter': VS.Tournament,
@@ -880,6 +927,8 @@ FUNCTIONS = {
         'method': 'GET',
         'range': 'videos',
         'path': '/tournaments/{tournament_id}/videos',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': True,
             'converter': VS.VideoTournament,
@@ -915,9 +964,132 @@ FUNCTIONS = {
         'method': 'GET',
         'range': None,
         'path': '/tournaments/{tournament_id}/matches/{match_id}/videos',
+        'body': False,
+        'scopes': [],
         'response': {
             'list': True,
             'converter': VS.Video,
+        },
+    },
+
+    # Organizer
+    'organizer_get_fields': {
+        'parameters': {
+            'tournament_id': {
+                'type': ParameterType.PATH,
+                'optional': False,
+                'list': False,
+                'converter': Converter.to_str
+            },
+            'target_type': {
+                'type': ParameterType.QUERY,
+                'optional': False,
+                'list': False,
+                'converter': Converter.none
+            },
+        },
+        'method': 'GET',
+        'range': None,
+        'path': '/tournaments/{tournament_id}/custom-fields',
+        'body': False,
+        'scopes': ['organizer:admin'],
+        'response': {
+            'list': True,
+            'converter': OS.CustomField,
+        },
+    },
+    'organizer_post_field': {
+        'parameters': {
+            'tournament_id': {
+                'type': ParameterType.PATH,
+                'optional': False,
+                'list': False,
+                'converter': Converter.to_str
+            },
+        },
+        'method': 'POST',
+        'range': None,
+        'path': '/tournaments/{tournament_id}/custom-fields',
+        'body': True,
+        'scopes': ['organizer:admin'],
+        'response': {
+            'list': False,
+            'converter': OS.CustomField,
+        },
+    },
+    'organizer_get_field': {
+        'parameters': {
+            'tournament_id': {
+                'type': ParameterType.PATH,
+                'optional': False,
+                'list': False,
+                'converter': Converter.to_str
+            },
+            'id': {
+                'type': ParameterType.PATH,
+                'optional': False,
+                'list': False,
+                'converter': Converter.to_str
+            },
+        },
+        'method': 'GET',
+        'range': None,
+        'path': '/tournaments/{tournament_id}/custom-fields/{id}',
+        'body': False,
+        'scopes': ['organizer:admin'],
+        'response': {
+            'list': False,
+            'converter': OS.CustomField,
+        },
+    },
+    'organizer_patch_field': {
+        'parameters': {
+            'tournament_id': {
+                'type': ParameterType.PATH,
+                'optional': False,
+                'list': False,
+                'converter': Converter.to_str
+            },
+            'id': {
+                'type': ParameterType.PATH,
+                'optional': False,
+                'list': False,
+                'converter': Converter.to_str
+            },
+        },
+        'method': 'PATCH',
+        'range': None,
+        'path': '/tournaments/{tournament_id}/custom-fields/{id}',
+        'body': True,
+        'scopes': ['organizer:admin'],
+        'response': {
+            'list': False,
+            'converter': OS.CustomField,
+        },
+    },
+    'organizer_delete_field': {
+        'parameters': {
+            'tournament_id': {
+                'type': ParameterType.PATH,
+                'optional': False,
+                'list': False,
+                'converter': Converter.to_str
+            },
+            'id': {
+                'type': ParameterType.PATH,
+                'optional': False,
+                'list': False,
+                'converter': Converter.to_str
+            },
+        },
+        'method': 'DELETE',
+        'range': None,
+        'path': '/tournaments/{tournament_id}/custom-fields/{id}',
+        'body': False,
+        'scopes': ['organizer:admin'],
+        'response': {
+            'list': False,
+            'converter': None,
         },
     },
 }

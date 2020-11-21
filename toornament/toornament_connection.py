@@ -8,6 +8,7 @@ from .exceptions import UnknownScope, MissingScope
 from time import time
 from .functions_dictionary_helper import ParameterType
 from .api_functions_doc import FUNCTIONS
+from .schema_element import convert_to_dict_remove_none
 
 
 def make_scopes_to_set(scopes) -> set:
@@ -83,10 +84,11 @@ class AbstractToornamentConnection(metaclass = ABCMeta):
     def _base_url() -> str:
         """:returns The Base-URL of the API"""
 
-    def _create_request_arguments(self, method, path, *, path_parameters, query_parameters, headers, json=None,
+    def _create_request_arguments(self, method, path, *, path_parameters, query_parameters, headers, json_dict=None,
                                   request_arguments=None, authorization=False) -> dict:
 
         headers['X-Api-Key'] = self.token
+        headers['Accept'] = 'application/json'
 
         if authorization:
             headers['Authorization'] = 'Bearer {access_token}'.format(access_token = self.bearer.token)
@@ -101,6 +103,10 @@ class AbstractToornamentConnection(metaclass = ABCMeta):
                 if isinstance(param, list):
                     query_parameters[name] = ','.join(param)
 
+        if json_dict is not None:
+            request_arguments['json'] = json_dict
+            headers['Content-Type'] = 'application/json'
+
         request_arguments.update(
             {
                 'method': method,
@@ -109,9 +115,6 @@ class AbstractToornamentConnection(metaclass = ABCMeta):
                 'params': query_parameters,
             }
         )
-
-        if json is not None:
-            request_arguments['json'] = json
 
         return request_arguments
 
@@ -140,7 +143,15 @@ class AbstractToornamentConnection(metaclass = ABCMeta):
 
         # In sorted_parameters the parameters get sorted by there type.
         # All types and there order can be found in toornament/functions_dictionary_helper.py/ParameterType
-        sorted_parameters = [{}, {}, {}, {}]
+        sorted_parameters = [{}, {}, {}]
+
+        # The body argument is the JSON Payload and gets handled differently then the other parameters
+        if parameter.get('body'):
+            body = parameter.pop('body')
+            json_dict = convert_to_dict_remove_none(body)
+        else:
+            # If there aren't any JSON-Parameters, don't send a JSON.
+            json_dict = None
 
         # Iterates through all given parameters, sort them into sorted_parameters, and manipulate them, if necessary
         for parameter_name, parameter_value in parameter.items():
@@ -174,17 +185,12 @@ class AbstractToornamentConnection(metaclass = ABCMeta):
                 else:
                     sorted_parameters[parameter_attributes['type']][parameter_name] = new_parameter_value
 
-        # If there aren't any JSON-Parameters, don't send a JSON, body.
-        if sorted_parameters[ParameterType.JSON]:
-            json = sorted_parameters[ParameterType.JSON]
-        else:
-            json = None
-
         # Get Scopes of the Endpoint.
-        scope = FUNCTIONS[function_name].get('scope')
+        scopes = FUNCTIONS[function_name]['scopes']
         # If the Endpoint don't have any scopes, it is a simple request. Otherwise, it's a authorized_request
-        if scope and self.scope_check and scope not in self.bearer.scopes:
-            raise MissingScope(scope)
+        # Check if scopes are Missing
+        if scopes and self.scope_check and not [scope for scope in scopes if scope in self.bearer.scopes]:
+            raise MissingScope(scopes)
 
         # Giving sorted parameters and known attributes receive and return a dict for request.
         return self._create_request_arguments(
@@ -193,16 +199,16 @@ class AbstractToornamentConnection(metaclass = ABCMeta):
             headers = sorted_parameters[ParameterType.HEADER],
             path_parameters = sorted_parameters[ParameterType.PATH],
             query_parameters = sorted_parameters[ParameterType.QUERY],
-            json = json,
+            json_dict = json_dict,
             request_arguments = request_arguments,
-            authorization = bool(scope),
+            authorization = bool(scopes),
         )
 
     @staticmethod
     def _build_class_from_response(function_name, response: dict):
         """Builds a Class from the response."""
 
-        if not response:
+        if response is None:
             return None
 
         converter_function = FUNCTIONS[function_name]['response']['converter']
@@ -287,7 +293,7 @@ class AsyncToornamentConnection(AbstractToornamentConnection, metaclass = ABCMet
         """Sends a request to the API.
         This Part of function checks weather to use Authorized Access or Simple Access and Calls the Function."""
 
-        if FUNCTIONS[function_name].get('scope'):
+        if FUNCTIONS[function_name]['scopes']:
             response = await self._authorized_access(function_name, request_arguments = request_arguments, parameter = parameter)
         else:
             response = await self._simple_access(function_name, request_arguments = request_arguments, parameter = parameter)

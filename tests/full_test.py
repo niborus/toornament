@@ -1,5 +1,5 @@
 import toornament
-from tests.local_file import TOKEN
+from tests.local_file import TOKEN, TOURNAMENT_ID, CLIENT_SECRET, CLIENT_ID
 import asyncio
 
 
@@ -16,7 +16,7 @@ def print_result(res):
         print(res.to_dict())
 
 
-def sync_test():
+def sync_test_viewer():
     t = toornament.SyncViewerAPI(TOKEN)
 
     # Testing
@@ -103,7 +103,7 @@ def sync_test():
     print(toornament.Information.fetch_platforms())
 
 
-async def async_test():
+async def async_test_viewer():
     t = toornament.AsyncViewerAPI(TOKEN)
 
     # Testing
@@ -188,15 +188,39 @@ async def async_test():
     print_result(res)
 
 
+def sync_test_organizer():
+    t = toornament.SyncOrganizerAPI(TOKEN, scopes = toornament.Scopes.ORGANIZER_ADMIN, client_id = CLIENT_ID, client_secret = CLIENT_SECRET)
+    t.refresh_bearer_token()
+
+    body = toornament.OrganizerSchema.CustomFieldCreate(machine_name = "test_field", type = 'text', label = 'Ein Label')
+    res = t.post_field(TOURNAMENT_ID, body)
+    print(res.to_dict())
+    field_id = res.id
+
+    body = toornament.OrganizerSchema.CustomFieldBase(required = True)
+    res = t.patch_field(TOURNAMENT_ID, field_id, body)
+    print(res.to_dict())
+
+    res = t.get_field(TOURNAMENT_ID, field_id)
+    print(res.to_dict())
+
+    res = t.get_fields(TOURNAMENT_ID, target_type = 'player')
+    print([e.to_dict() for e in res])
+
+    res = t.delete_field(TOURNAMENT_ID, field_id)
+    print(res)
+
+
 def internal_test():
     pass
 
 # Test Sync Access
-sync_test()
+#sync_test_viewer()
+sync_test_organizer()
 
 # Test Async Access
-loop = asyncio.get_event_loop()
-res = loop.run_until_complete(async_test())
+#loop = asyncio.get_event_loop()
+#res = loop.run_until_complete(async_test_viewer())
 
 # Test internal functions
 internal_test()
