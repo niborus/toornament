@@ -1,8 +1,9 @@
 from .converter import Converter
+from .schema import SchemaElement
 
 
 class ViewerSchema:
-    class Participant:
+    class Participant(SchemaElement):
 
         def __init__(self, *, id, name, custom_fields):
             """
@@ -15,7 +16,7 @@ class ViewerSchema:
             self.name = name
             self.custom_fields = custom_fields
 
-    class Opponent:
+    class Opponent(SchemaElement):
 
         def __init__(self, *, number, position=None, result=None, rank=None, forfeit, score=None, properties=None):
             """
@@ -57,7 +58,7 @@ class ViewerSchema:
 
             self.properties = properties
 
-    class Game:
+    class Game(SchemaElement):
 
         def __init__(self, *, number, type=None, status, opponents, properties):
             """
@@ -73,7 +74,7 @@ class ViewerSchema:
             self.opponents = [ViewerSchema.MatchGameOpponent(**opponent) for opponent in opponents]
             self.properties = properties
 
-    class Match:
+    class Match(SchemaElement):
 
         def __init__(self, *, id, stage_id, group_id, round_id, number, type, status, scheduled_datetime=None,
                      played_at=None, opponents):
@@ -114,7 +115,7 @@ class ViewerSchema:
             self.public_notes = public_notes
             self.games = [ViewerSchema.Game(**game) for game in games]
 
-    class TournamentLight:
+    class TournamentLight(SchemaElement):
 
         def __init__(self, *, id, name, full_name=None):
             """
@@ -137,7 +138,7 @@ class ViewerSchema:
             super().__init__(**kwargs)
             self.tournament = ViewerSchema.TournamentLight(**tournament)
 
-    class BracketNodeOpponent:
+    class BracketNodeOpponent(SchemaElement):
 
         def __init__(self, *, number, result=None, rank=None, forfeit, score=None, source_type, source_node_id=None,
                      participant):
@@ -161,7 +162,7 @@ class ViewerSchema:
             self.source_node_id = int(source_node_id) if source_node_id else None
             self.participant = ViewerSchema.Participant(**participant) if participant else None
 
-    class BracketNode:
+    class BracketNode(SchemaElement):
 
         def __init__(self, *, id, stage_id, group_id, round_id, number, type, status, scheduled_datetime=None,
                      played_at=None, depth, branch=None, opponents):
@@ -193,7 +194,7 @@ class ViewerSchema:
             self.branch = branch
             self.opponents = [ViewerSchema.BracketNodeOpponent(**opponent) for opponent in opponents]
 
-    class CustomField:
+    class CustomField(SchemaElement):
 
         def __init__(self, *, machine_name, label, target_type, type, default_value=None, required, public, position):
             """
@@ -216,7 +217,7 @@ class ViewerSchema:
             self.public = public
             self.position = position
 
-    class Discipline:
+    class Discipline(SchemaElement):
 
         def __init__(self, *, id, name, shortname, fullname, copyrights):
             """
@@ -233,7 +234,7 @@ class ViewerSchema:
             self.fullname = fullname
             self.copyrights = copyrights
 
-    class DisciplineFeature:
+    class DisciplineFeature(SchemaElement):
 
         def __init__(self, *, name, type, options):
             """
@@ -246,7 +247,7 @@ class ViewerSchema:
             self.type = type
             self.options = options
 
-    class TeamSize:
+    class TeamSize(SchemaElement):
 
         def __init__(self, *, min, max):
             """Sets the minimum and maximum of players in a team
@@ -272,7 +273,7 @@ class ViewerSchema:
             self.team_size = ViewerSchema.TeamSize(**team_size)
             self.features = [ViewerSchema.DisciplineFeature(**feature) for feature in features]
 
-    class Group:
+    class Group(SchemaElement):
 
         def __init__(self, *, id, stage_id, number, name, closed, settings):
             """
@@ -291,7 +292,7 @@ class ViewerSchema:
             self.closed = closed
             self.settings = settings
 
-    class ParticipantPlayer:
+    class ParticipantPlayer(SchemaElement):
 
         def __init__(self, *, id, name, custom_fields):
             """
@@ -304,7 +305,7 @@ class ViewerSchema:
             self.name = name
             self.custom_fields = custom_fields
 
-    class TeamPlayerParticipant:
+    class TeamPlayerParticipant(SchemaElement):
 
         def __init__(self, *, name, custom_fields):
             """
@@ -326,7 +327,7 @@ class ViewerSchema:
 
             self.lineup = [ViewerSchema.TeamPlayerParticipant(**player) for player in lineup]
 
-    class Playlist:
+    class Playlist(SchemaElement):
 
         def __init__(self, *, id, name, description=None):
             """
@@ -339,7 +340,7 @@ class ViewerSchema:
             self.name = name
             self.description = description
 
-    class RankingItemProperties:
+    class RankingItemProperties(SchemaElement):
 
         def __init__(self, *, wins, draws, losses, played, forfeits, **undocumented_properties):
             """
@@ -384,7 +385,7 @@ class ViewerSchema:
 
             self.match_history = match_history
 
-    class RankingItem:
+    class RankingItem(SchemaElement):
 
         def __init__(self, *, id, group_id, number, position, rank=None, participant=None, points, properties):
             """
@@ -413,7 +414,7 @@ class ViewerSchema:
             else:
                 self.properties = ViewerSchema.RankingItemProperties(**properties)
 
-    class Round:
+    class Round(SchemaElement):
 
         def __init__(self, *, id, stage_id, group_id, number, name, closed, settings):
             """
@@ -434,7 +435,7 @@ class ViewerSchema:
             self.closed = closed
             self.settings = settings
 
-    class Stage:
+    class Stage(SchemaElement):
 
         def __init__(self, *, id, number, name, type, closed, settings):
             """
@@ -453,7 +454,7 @@ class ViewerSchema:
             self.closed = closed
             self.settings = settings
 
-    class StandingItem:
+    class StandingItem(SchemaElement):
 
         def __init__(self, *, id, position, rank=None, participant=None, tournament_id):
             """
@@ -470,7 +471,7 @@ class ViewerSchema:
             self.participant = ViewerSchema.Participant(**participant) if participant else None
             self.tournament_id = int(tournament_id)
 
-    class Stream:
+    class Stream(SchemaElement):
 
         def __init__(self, *, id, name, url, language):
             """
@@ -485,7 +486,7 @@ class ViewerSchema:
             self.url = url
             self.language = language
 
-    class Video:
+    class Video(SchemaElement):
 
         def __init__(self, *, id, name, url, language, category):
             """
@@ -513,7 +514,7 @@ class ViewerSchema:
 
             self.match_id = int(match_id) if match_id else None
 
-    class TournamentLogo:
+    class TournamentLogo(SchemaElement):
 
         def __init__(self, *, logo_small, logo_medium, logo_large, original):
             """
@@ -528,7 +529,7 @@ class ViewerSchema:
             self.logo_large = logo_large
             self.original = original
 
-    class Tournament:
+    class Tournament(SchemaElement):
 
         def __init__(self, *, id, discipline, name, full_name=None, status, scheduled_date_start=None,
                      scheduled_date_end=None, timezone, public, size, online=None, location=None, country=None,
