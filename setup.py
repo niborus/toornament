@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="toornament",
-    version="0.0.1",
+    version="0.1.0-pre",
     author="niborus",
     author_email="niborus.management@gmail.com",
     description="A Python wrapper for the Toornament API.",
@@ -18,5 +18,5 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    python_requires='>=3.6', install_requires = ['requests']
+    python_requires='>=3.6', install_requires = ['requests', 'aiohttp']
 )
